@@ -107,13 +107,14 @@ export function getFilters() {
   return {
     language: document.getElementById('filter-language').value,
     visibility: document.getElementById('filter-visibility').value,
+    released: document.getElementById('filter-released').value,
     sortBy: document.getElementById('sort-by').value,
   };
 }
 
 const STATUS_ORDER = { failure: 0, in_progress: 1, queued: 2, unknown: 3, cancelled: 4, success: 5 };
 
-function filterAndSort(repos, workflowMap, filters) {
+function filterAndSort(repos, workflowMap, releasesMap, filters) {
   let filtered = [...repos];
 
   if (filters.language) {
@@ -123,6 +124,12 @@ function filterAndSort(repos, workflowMap, filters) {
     filtered = filtered.filter(r =>
       filters.visibility === 'private' ? r.private : !r.private
     );
+  }
+  if (filters.released) {
+    filtered = filtered.filter(r => {
+      const hasRelease = !!releasesMap.get(r.name);
+      return filters.released === 'yes' ? hasRelease : !hasRelease;
+    });
   }
 
   if (filters.sortBy === 'name') {
@@ -276,7 +283,7 @@ export function setView(view) {
 export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, filters, view) {
   container.innerHTML = '';
 
-  const filtered = filterAndSort(repos, workflowMap, filters);
+  const filtered = filterAndSort(repos, workflowMap, releasesMap, filters);
 
   if (filtered.length === 0) {
     container.className = 'view-cards';

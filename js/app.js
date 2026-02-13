@@ -142,6 +142,7 @@ function initSettings() {
 function initFilters() {
   document.getElementById('filter-language').addEventListener('change', applyFilters);
   document.getElementById('filter-visibility').addEventListener('change', applyFilters);
+  document.getElementById('filter-released').addEventListener('change', applyFilters);
   document.getElementById('sort-by').addEventListener('change', applyFilters);
 
   // View toggle
