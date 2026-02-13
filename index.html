@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RallypointOne Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <base target="_blank">
+</head>
+<body>
+  <header id="header">
+    <h1>RallypointOne</h1>
+    <button id="settings-toggle" aria-label="Settings">&#9881;</button>
+  </header>
+
+  <div id="settings-panel" class="collapsed">
+    <div class="settings-content">
+      <label for="token-input">GitHub Token <span class="hint">(needed for private repos)</span></label>
+      <div class="token-row">
+        <input type="password" id="token-input" placeholder="ghp_...">
+        <button id="token-save">Save</button>
+        <button id="token-clear">Clear</button>
+      </div>
+      <div id="rate-limit" class="hint"></div>
+    </div>
+  </div>
+
+  <div id="filters">
+    <div class="filter-group">
+      <label for="filter-language">Language</label>
+      <select id="filter-language"><option value="">All</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="filter-visibility">Visibility</label>
+      <select id="filter-visibility">
+        <option value="">All</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="sort-by">Sort by</label>
+      <select id="sort-by">
+        <option value="pushed">Last Pushed</option>
+        <option value="name">Name (A-Z)</option>
+        <option value="status">Status</option>
+      </select>
+    </div>
+    <div class="filter-group view-toggle">
+      <label>View</label>
+      <div class="view-buttons">
+        <button class="view-btn active" data-view="cards" aria-label="Card view">&#9638; Cards</button>
+        <button class="view-btn" data-view="table" aria-label="Table view">&#9776; Table</button>
+        <button class="view-btn" data-view="compact" aria-label="Compact view">&#9472; Compact</button>
+      </div>
+    </div>
+  </div>
+
+  <main id="dashboard"></main>
+
+  <footer id="footer">
+    <span id="last-refreshed"></span>
+    <button id="refresh-btn">Refresh</button>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
