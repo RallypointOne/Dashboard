@@ -266,7 +266,7 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
 }
 
 export function getView() {
-  return localStorage.getItem('gh_dashboard_view') || 'cards';
+  return localStorage.getItem('gh_dashboard_view') || 'table';
 }
 
 export function setView(view) {
