@@ -27,7 +27,6 @@ export function createRepoCard(repo, workflows, issueCounts, release) {
   const overallStatus = ciRun?.conclusion ?? 'unknown';
   card.dataset.status = overallStatus;
   card.dataset.language = repo.language || '';
-  card.dataset.visibility = repo.private ? 'private' : 'public';
 
   const docsEntry = workflows
     ? Object.entries(workflows).find(([name]) => /docs|documentation/i.test(name))
@@ -67,9 +66,6 @@ export function createRepoCard(repo, workflows, issueCounts, release) {
   card.innerHTML = `
     <div class="card-header">
       <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
-      <span class="badge ${repo.private ? 'badge-private' : 'badge-public'}">
-        ${repo.private ? 'private' : 'public'}
-      </span>
     </div>
     ${repo.description ? `<p class="repo-desc">${escapeHTML(repo.description)}</p>` : ''}
     <div class="status-row">${statusHTML}</div>
@@ -106,7 +102,6 @@ export function populateLanguageFilter(repos) {
 export function getFilters() {
   return {
     language: document.getElementById('filter-language').value,
-    visibility: document.getElementById('filter-visibility').value,
     released: document.getElementById('filter-released').value,
     sortBy: document.getElementById('sort-by').value,
   };
@@ -119,11 +114,6 @@ function filterAndSort(repos, workflowMap, releasesMap, filters) {
 
   if (filters.language) {
     filtered = filtered.filter(r => r.language === filters.language);
-  }
-  if (filters.visibility) {
-    filtered = filtered.filter(r =>
-      filters.visibility === 'private' ? r.private : !r.private
-    );
   }
   if (filters.released) {
     filtered = filtered.filter(r => {
@@ -197,7 +187,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     <thead>
       <tr>
         <th>Repository</th>
-        <th>Visibility</th>
         <th>Language</th>
         <th>CI</th>
         <th>Docs</th>
@@ -222,7 +211,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
         <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
         ${repo.description ? `<span class="table-desc">${escapeHTML(repo.description)}</span>` : ''}
       </td>
-      <td><span class="badge ${repo.private ? 'badge-private' : 'badge-public'}">${repo.private ? 'private' : 'public'}</span></td>
       <td>${repo.language ? `<span class="lang-badge">${repo.language}</span>` : '<span class="text-muted">-</span>'}</td>
       <td class="status-cell">${ciRun
         ? `<a href="${ciRun.html_url}" class="status-item">${statusDotHTML(ciRun.conclusion)} ${ciRun.conclusion ?? 'running'}</a>`
@@ -259,7 +247,6 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
     row.innerHTML = `
       <span class="compact-status">${statusDotHTML(ciRun?.conclusion)}</span>
       <a href="${repo.html_url}" class="compact-name">${repo.name}</a>
-      <span class="badge ${repo.private ? 'badge-private' : 'badge-public'}">${repo.private ? 'private' : 'public'}</span>
       ${repo.language ? `<span class="lang-badge">${repo.language}</span>` : ''}
       ${docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
       ${pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
