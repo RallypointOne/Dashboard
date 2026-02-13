@@ -300,17 +300,3 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
   }
 }
 
-export function updateRateLimit(rateLimit) {
-  const el = document.getElementById('rate-limit');
-  if (rateLimit.remaining == null) {
-    el.textContent = '';
-    return;
-  }
-  const resetTime = rateLimit.resetAt.toLocaleTimeString();
-  el.textContent = `API rate limit: ${rateLimit.remaining}/${rateLimit.limit} remaining (resets at ${resetTime})`;
-  if (rateLimit.remaining < 10) {
-    el.style.color = 'var(--color-failure)';
-  } else {
-    el.style.color = '';
-  }
-}

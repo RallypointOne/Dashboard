@@ -5,7 +5,6 @@ import {
   getFilters,
   getView,
   setView,
-  updateRateLimit,
 } from './components.js';
 
 const ORG = 'RallypointOne';
@@ -23,11 +22,7 @@ async function loadDashboard() {
   try {
     const repos = await api.fetchOrgRepos(ORG);
     if (!repos || repos.length === 0) {
-      dashboard.innerHTML = `<div class="error">
-        <p>No repositories found.</p>
-        ${!api.isAuthenticated() ? '<p>Add a GitHub token in settings to see private repos.</p>' : ''}
-      </div>`;
-      updateRateLimit(api.getRateLimit());
+      dashboard.innerHTML = '<div class="error"><p>No repositories found.</p></div>';
       return;
     }
 
@@ -84,15 +79,10 @@ async function loadDashboard() {
 
     populateLanguageFilter(repos);
     renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, getFilters(), getView());
-    updateRateLimit(api.getRateLimit());
     updateLastRefreshed();
 
   } catch (err) {
-    dashboard.innerHTML = `<div class="error">
-      <p>Error: ${err.message}</p>
-      ${!api.isAuthenticated() ? '<p>Try adding a GitHub token in settings.</p>' : ''}
-    </div>`;
-    updateRateLimit(api.getRateLimit());
+    dashboard.innerHTML = `<div class="error"><p>Error: ${err.message}</p></div>`;
   }
 }
 
@@ -105,38 +95,6 @@ function applyFilters() {
   if (cachedRepos.length === 0) return;
   const dashboard = document.getElementById('dashboard');
   renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, getFilters(), getView());
-}
-
-function initSettings() {
-  const toggle = document.getElementById('settings-toggle');
-  const panel = document.getElementById('settings-panel');
-  const tokenInput = document.getElementById('token-input');
-  const saveBtn = document.getElementById('token-save');
-  const clearBtn = document.getElementById('token-clear');
-
-  toggle.addEventListener('click', () => {
-    panel.classList.toggle('collapsed');
-  });
-
-  if (api.isAuthenticated()) {
-    tokenInput.placeholder = 'Token saved';
-  }
-
-  saveBtn.addEventListener('click', () => {
-    const token = tokenInput.value.trim();
-    if (token) {
-      api.setToken(token);
-      tokenInput.value = '';
-      tokenInput.placeholder = 'Token saved';
-      loadDashboard();
-    }
-  });
-
-  clearBtn.addEventListener('click', () => {
-    api.clearToken();
-    tokenInput.placeholder = 'ghp_...';
-    loadDashboard();
-  });
 }
 
 function initFilters() {
@@ -161,7 +119,6 @@ function initFilters() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initSettings();
   initFilters();
   document.getElementById('refresh-btn').addEventListener('click', () => {
     sessionStorage.clear();

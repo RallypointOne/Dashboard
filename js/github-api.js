@@ -1,19 +1,8 @@
 const API_BASE = 'https://api.github.com';
 const CACHE_TTL = 5 * 60 * 1000;
-const TOKEN_KEY = 'gh_dashboard_token';
-
 export class GitHubAPI {
-  #token = null;
-  #rateLimit = { remaining: null, limit: null, resetAt: null };
-
-  constructor() {
-    this.#token = localStorage.getItem(TOKEN_KEY);
-  }
-
   get #headers() {
-    const h = { 'Accept': 'application/vnd.github+json' };
-    if (this.#token) h['Authorization'] = `Bearer ${this.#token}`;
-    return h;
+    return { 'Accept': 'application/vnd.github+json' };
   }
 
   async #fetch(endpoint) {
@@ -25,12 +14,6 @@ export class GitHubAPI {
     }
 
     const res = await fetch(`${API_BASE}${endpoint}`, { headers: this.#headers });
-
-    this.#rateLimit = {
-      remaining: parseInt(res.headers.get('X-RateLimit-Remaining')),
-      limit: parseInt(res.headers.get('X-RateLimit-Limit')),
-      resetAt: new Date(parseInt(res.headers.get('X-RateLimit-Reset')) * 1000),
-    };
 
     if (!res.ok) {
       if (res.status === 404) return null;
@@ -101,23 +84,4 @@ export class GitHubAPI {
     };
   }
 
-  getRateLimit() {
-    return { ...this.#rateLimit };
-  }
-
-  setToken(token) {
-    this.#token = token;
-    localStorage.setItem(TOKEN_KEY, token);
-    sessionStorage.clear(); // clear cache so new token is used
-  }
-
-  clearToken() {
-    this.#token = null;
-    localStorage.removeItem(TOKEN_KEY);
-    sessionStorage.clear();
-  }
-
-  isAuthenticated() {
-    return !!this.#token;
-  }
 }
