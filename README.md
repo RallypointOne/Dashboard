@@ -1,5 +1,7 @@
 # RallypointOne Dashboard
 
+[![Deploy to GitHub Pages](https://github.com/RallypointOne/Dashboard/actions/workflows/deploy.yml/badge.svg)](https://github.com/RallypointOne/Dashboard/actions/workflows/deploy.yml)
+
 A static dashboard that displays the status of all public repositories in the [RallypointOne](https://github.com/RallypointOne) GitHub organization.
 
 **Live site:** [https://rallypointone.github.io/Dashboard/](https://rallypointone.github.io/Dashboard/)
