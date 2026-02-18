@@ -277,8 +277,28 @@ export function setView(view) {
   localStorage.setItem('gh_dashboard_view', view);
 }
 
+function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view) {
+  if (repos.length === 0) return;
+
+  const heading = document.createElement('h2');
+  heading.className = 'section-heading';
+  heading.textContent = label;
+  container.appendChild(heading);
+
+  const section = document.createElement('div');
+  if (view === 'table') {
+    renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else if (view === 'compact') {
+    renderCompact(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else {
+    renderCards(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  }
+  container.appendChild(section);
+}
+
 export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, filters, view) {
   container.innerHTML = '';
+  container.className = '';
 
   const filtered = filterAndSort(repos, workflowMap, releasesMap, filters);
 
@@ -288,12 +308,10 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
     return;
   }
 
-  if (view === 'table') {
-    renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else if (view === 'compact') {
-    renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else {
-    renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  }
+  const juliaPackages = filtered.filter(r => r.name.endsWith('.jl'));
+  const other = filtered.filter(r => !r.name.endsWith('.jl'));
+
+  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
+  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
 }
 

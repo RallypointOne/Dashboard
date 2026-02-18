@@ -163,6 +163,18 @@ a:hover {
   flex: 1;
 }
 
+/* Section Headings */
+.section-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.section-heading:first-child {
+  margin-top: 0;
+}
+
 /* Card View */
 #dashboard.view-cards {
   display: grid;
