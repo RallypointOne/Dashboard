@@ -29,8 +29,20 @@ async function loadDashboard() {
 
     const workflowMap = new Map(Object.entries(data.workflows));
     const issueCountsMap = new Map(Object.entries(data.issue_counts));
-    const releasesMap = new Map(Object.entries(data.releases));
     const pendingReleasesMap = new Map(Object.entries(data.pending_releases || {}));
+
+    // Build releasesMap: prefer GitHub Release, fall back to General registry
+    const releasesMap = new Map(Object.entries(data.releases));
+    const registryMap = data.registry || {};
+    for (const [name, reg] of Object.entries(registryMap)) {
+      if (!releasesMap.has(name)) {
+        releasesMap.set(name, {
+          tag_name: reg.version,
+          html_url: reg.registry_url,
+          published_at: null,
+        });
+      }
+    }
 
     cachedRepos = repos;
     cachedWorkflows = workflowMap;

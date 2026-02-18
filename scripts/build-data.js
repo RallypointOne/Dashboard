@@ -76,6 +76,23 @@ async function fetchIssueCounts(repo) {
   };
 }
 
+async function fetchRegistryVersion(repoName) {
+  // Julia repos end in .jl; package name in General registry omits the .jl
+  if (!repoName.endsWith('.jl')) return null;
+  const pkgName = repoName.slice(0, -3);
+  const letter = pkgName[0];
+  const data = await apiFetch(
+    `/repos/JuliaRegistries/General/contents/${letter}/${pkgName}/Versions.toml`
+  );
+  if (!data || !data.content) return null;
+  const content = Buffer.from(data.content, 'base64').toString('utf-8');
+  // Parse version entries like ["0.1.2"]
+  const versions = [...content.matchAll(/^\["(.+?)"\]/gm)].map(m => m[1]);
+  if (versions.length === 0) return null;
+  const latest = versions[versions.length - 1];
+  return { version: `v${latest}`, registry_url: `https://juliahub.com/ui/Packages/General/${pkgName}` };
+}
+
 async function fetchPendingRegistrations() {
   // Search for open PRs in JuliaRegistries/General mentioning the org
   let data;
@@ -114,7 +131,7 @@ async function main() {
   console.log(`Found ${repos.length} repos`);
 
   // Fetch all supplementary data in parallel
-  const [workflowResults, releaseResults, issueResults, pendingRegs] = await Promise.all([
+  const [workflowResults, releaseResults, issueResults, registryResults, pendingRegs] = await Promise.all([
     Promise.allSettled(
       repos.map(repo =>
         fetchWorkflowRuns(repo.name, repo.default_branch || 'main')
@@ -131,6 +148,12 @@ async function main() {
       repos.map(repo =>
         fetchIssueCounts(repo.name)
           .then(counts => ({ name: repo.name, counts }))
+      )
+    ),
+    Promise.allSettled(
+      repos.map(repo =>
+        fetchRegistryVersion(repo.name)
+          .then(reg => ({ name: repo.name, reg }))
       )
     ),
     fetchPendingRegistrations(),
@@ -157,6 +180,14 @@ async function main() {
     }
   }
 
+  const registry = {};
+  for (const result of registryResults) {
+    if (result.status === 'fulfilled' && result.value.reg) {
+      registry[result.value.name] = result.value.reg;
+    }
+  }
+
+  console.log(`Registry entries: ${Object.keys(registry).length}`);
   console.log(`Pending registrations: ${Object.keys(pendingRegs).length}`);
 
   const data = {
@@ -165,6 +196,7 @@ async function main() {
     workflows,
     issue_counts,
     releases,
+    registry,
     pending_releases: pendingRegs,
   };
 
