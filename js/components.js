@@ -161,7 +161,7 @@ function releaseHTML(release, pending) {
 
 function releaseTableHTML(release, pending) {
   const parts = [];
-  if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a><span class="meta"> ${timeAgo(release.published_at)}</span>`);
+  if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a>${release.published_at ? `<span class="meta"> ${timeAgo(release.published_at)}</span>` : ''}`);
   if (pending) parts.push(pendingHTML(pending));
   if (parts.length === 0) return '<span class="text-muted">-</span>';
   return parts.join(' ');
