@@ -25,7 +25,7 @@ async function fetchAllRepos() {
   let page = 1;
   let allRepos = [];
   while (true) {
-    const repos = await apiFetch(`/orgs/${ORG}/repos?per_page=100&sort=pushed&page=${page}`);
+    const repos = await apiFetch(`/orgs/${ORG}/repos?per_page=100&sort=pushed&type=public&page=${page}`);
     if (!repos || repos.length === 0) break;
     allRepos = allRepos.concat(repos);
     if (repos.length < 100) break;
