@@ -53,8 +53,9 @@ async function loadDashboard() {
     populateLanguageFilter(repos);
     renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, getFilters(), getView());
 
+    const mins = Math.round((Date.now() - new Date(data.generated_at)) / 60000);
     document.getElementById('last-refreshed').textContent =
-      `Last updated: ${new Date(data.generated_at).toLocaleString()}`;
+      `Last updated: ${mins <= 0 ? 'just now' : `${mins} minute${mins === 1 ? '' : 's'} ago`}`;
 
   } catch (err) {
     dashboard.innerHTML = `<div class="error"><p>Error: ${err.message}</p></div>`;
