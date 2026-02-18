@@ -19,7 +19,7 @@ function statusClass(conclusion) {
   return conclusion; // success, failure, cancelled, etc.
 }
 
-export function createRepoCard(repo, workflows, issueCounts, release) {
+export function createRepoCard(repo, workflows, issueCounts, release, pending) {
   const card = document.createElement('div');
   card.className = 'repo-card';
 
@@ -71,7 +71,7 @@ export function createRepoCard(repo, workflows, issueCounts, release) {
     <div class="status-row">${statusHTML}</div>
     <div class="card-footer">
       ${repo.language ? `<span class="lang-badge">${repo.language}</span>` : ''}
-      ${releaseHTML(release)}
+      ${releaseHTML(release, pending)}
       <span class="meta">pushed ${timeAgo(repo.pushed_at)}</span>
       ${issuesHTML(repo, issueCounts)}
     </div>
@@ -147,14 +147,24 @@ function statusDotHTML(conclusion) {
   return `<span class="status-dot status-${statusClass(conclusion)}"></span>`;
 }
 
-function releaseHTML(release) {
-  if (!release) return '';
-  return `<a href="${release.html_url}" class="release-badge">${release.tag_name}</a>`;
+function pendingHTML(pending) {
+  if (!pending) return '';
+  return `<a href="${pending.html_url}" class="pending-badge">${pending.version} pending</a>`;
 }
 
-function releaseTableHTML(release) {
-  if (!release) return '<span class="text-muted">-</span>';
-  return `<a href="${release.html_url}" class="release-badge">${release.tag_name}</a><span class="meta"> ${timeAgo(release.published_at)}</span>`;
+function releaseHTML(release, pending) {
+  const parts = [];
+  if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a>`);
+  if (pending) parts.push(pendingHTML(pending));
+  return parts.join(' ') || '';
+}
+
+function releaseTableHTML(release, pending) {
+  const parts = [];
+  if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a><span class="meta"> ${timeAgo(release.published_at)}</span>`);
+  if (pending) parts.push(pendingHTML(pending));
+  if (parts.length === 0) return '<span class="text-muted">-</span>';
+  return parts.join(' ');
 }
 
 function issuesHTML(repo, counts) {
@@ -172,14 +182,14 @@ function issuesTableHTML(repo, counts) {
   return `<a href="${url}?q=is%3Aissue+is%3Aopen" class="issues-open">${open}</a> / <a href="${url}?q=is%3Aissue+is%3Aclosed" class="issues-closed">${closed}</a>`;
 }
 
-function renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap) {
+function renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap) {
   container.className = 'view-cards';
   for (const repo of filtered) {
-    container.appendChild(createRepoCard(repo, workflowMap.get(repo.name), issueCountsMap.get(repo.name), releasesMap.get(repo.name)));
+    container.appendChild(createRepoCard(repo, workflowMap.get(repo.name), issueCountsMap.get(repo.name), releasesMap.get(repo.name), pendingReleasesMap.get(repo.name)));
   }
 }
 
-function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap) {
+function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap) {
   container.className = 'view-table';
   const table = document.createElement('table');
   table.className = 'repo-table';
@@ -221,7 +231,7 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
       <td class="links-cell">${pagesBase
         ? `<a href="${pagesBase}">Docs</a> &middot; <a href="${pagesBase}dev/coverage/">Coverage</a>`
         : '<span class="text-muted">-</span>'}</td>
-      <td>${releaseTableHTML(releasesMap.get(repo.name))}</td>
+      <td>${releaseTableHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}</td>
       <td class="issues-cell">${issuesTableHTML(repo, issueCountsMap.get(repo.name))}</td>
       <td class="meta">${timeAgo(repo.pushed_at)}</td>
     `;
@@ -231,7 +241,7 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
   container.appendChild(table);
 }
 
-function renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap) {
+function renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap) {
   container.className = 'view-compact';
   const list = document.createElement('div');
   list.className = 'compact-list';
@@ -250,7 +260,7 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
       ${repo.language ? `<span class="lang-badge">${repo.language}</span>` : ''}
       ${docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
       ${pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
-      ${releaseHTML(releasesMap.get(repo.name))}
+      ${releaseHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}
       ${issuesHTML(repo, issueCountsMap.get(repo.name))}
       <span class="compact-pushed">${timeAgo(repo.pushed_at)}</span>
     `;
@@ -267,7 +277,7 @@ export function setView(view) {
   localStorage.setItem('gh_dashboard_view', view);
 }
 
-export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, filters, view) {
+export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, filters, view) {
   container.innerHTML = '';
 
   const filtered = filterAndSort(repos, workflowMap, releasesMap, filters);
@@ -279,11 +289,11 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
   }
 
   if (view === 'table') {
-    renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap);
+    renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
   } else if (view === 'compact') {
-    renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap);
+    renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
   } else {
-    renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap);
+    renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
   }
 }
 

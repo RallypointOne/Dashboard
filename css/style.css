@@ -310,10 +310,25 @@ a:hover {
   white-space: nowrap;
 }
 
+.pending-badge {
+  background: #fff8c5;
+  color: #9a6700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 @media (prefers-color-scheme: dark) {
   .release-badge {
     background: #0d3117;
     color: #3fb950;
+  }
+
+  .pending-badge {
+    background: #3b2300;
+    color: #d29922;
   }
 }
 
