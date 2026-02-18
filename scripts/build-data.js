@@ -78,9 +78,15 @@ async function fetchIssueCounts(repo) {
 
 async function fetchPendingRegistrations() {
   // Search for open PRs in JuliaRegistries/General mentioning the org
-  const data = await apiFetch(
-    `/search/issues?q=repo:JuliaRegistries/General+type:pr+state:open+${ORG}&per_page=100`
-  );
+  let data;
+  try {
+    data = await apiFetch(
+      `/search/issues?q=repo:JuliaRegistries/General+type:pr+state:open+${ORG}&per_page=100`
+    );
+  } catch (err) {
+    console.warn(`Warning: could not fetch pending registrations: ${err.message}`);
+    return {};
+  }
   if (!data || !data.items) return {};
 
   // Map repo names to their pending registration PRs
