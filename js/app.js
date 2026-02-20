@@ -39,7 +39,7 @@ async function loadDashboard() {
         releasesMap.set(name, {
           tag_name: reg.version,
           html_url: reg.registry_url,
-          published_at: null,
+          published_at: reg.published_at || null,
         });
       }
     }

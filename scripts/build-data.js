@@ -90,7 +90,17 @@ async function fetchRegistryVersion(repoName) {
   const versions = [...content.matchAll(/^\["(.+?)"\]/gm)].map(m => m[1]);
   if (versions.length === 0) return null;
   const latest = versions[versions.length - 1];
-  return { version: `v${latest}`, registry_url: `https://juliahub.com/ui/Packages/General/${pkgName}` };
+
+  // Fetch the date of the latest commit to Versions.toml (i.e. when the latest version was registered)
+  let published_at = null;
+  const commits = await apiFetch(
+    `/repos/JuliaRegistries/General/commits?path=${letter}/${pkgName}/Versions.toml&per_page=1`
+  );
+  if (commits && commits.length > 0) {
+    published_at = commits[0].commit?.committer?.date ?? null;
+  }
+
+  return { version: `v${latest}`, registry_url: `https://juliahub.com/ui/Packages/General/${pkgName}`, published_at };
 }
 
 async function fetchPendingRegistrations() {
