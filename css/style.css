@@ -296,6 +296,24 @@ a:hover {
   border: 2px solid var(--color-neutral);
 }
 
+/* Status Timeline */
+.status-timeline {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.status-bar {
+  width: 3px;
+  height: 16px;
+  border-radius: 1px;
+  display: inline-block;
+}
+
+.status-bar:hover {
+  opacity: 0.7;
+}
+
 .docs-link,
 .coverage-link {
   font-size: 0.8rem;

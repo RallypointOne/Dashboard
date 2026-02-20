@@ -36,23 +36,23 @@ async function fetchAllRepos() {
 
 async function fetchWorkflowRuns(repo, branch) {
   const data = await apiFetch(
-    `/repos/${ORG}/${repo}/actions/runs?per_page=20&branch=${encodeURIComponent(branch)}`
+    `/repos/${ORG}/${repo}/actions/runs?per_page=100&branch=${encodeURIComponent(branch)}`
   );
   if (!data || !data.workflow_runs) return null;
 
-  const latest = new Map();
+  const grouped = new Map();
   for (const run of data.workflow_runs) {
-    if (!latest.has(run.name)) {
-      latest.set(run.name, {
-        name: run.name,
-        status: run.status,
-        conclusion: run.conclusion,
-        html_url: run.html_url,
-        created_at: run.created_at,
-      });
-    }
+    if (!grouped.has(run.name)) grouped.set(run.name, []);
+    grouped.get(run.name).push({
+      status: run.status,
+      conclusion: run.conclusion,
+      html_url: run.html_url,
+      created_at: run.created_at,
+    });
   }
-  return Object.fromEntries(latest);
+  // Keep last 20 per workflow, reversed so oldest come first (for left-to-right timeline)
+  for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 20).reverse());
+  return Object.fromEntries(grouped);
 }
 
 async function fetchLatestRelease(repo) {

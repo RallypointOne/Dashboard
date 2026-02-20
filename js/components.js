@@ -27,39 +27,25 @@ export function createRepoCard(repo, workflows, issueCounts, release, pending) {
   const card = document.createElement('div');
   card.className = 'repo-card';
 
-  const ciRun = workflows?.['CI'];
-  const overallStatus = ciRun?.conclusion ?? 'unknown';
+  const ciRuns = workflows?.['CI'];
+  const latestCI = getLatestRun(ciRuns);
+  const overallStatus = latestCI?.conclusion ?? 'unknown';
   card.dataset.status = overallStatus;
   card.dataset.language = repo.language || '';
 
-  const docsEntry = workflows
-    ? Object.entries(workflows).find(([name]) => /docs|documentation/i.test(name))
-    : null;
-  const docsRun = docsEntry ? docsEntry[1] : null;
+  const docsRuns = getDocsRuns(workflows);
 
   let statusHTML = '';
 
-  if (ciRun) {
-    statusHTML += `
-      <a href="${ciRun.html_url}" class="status-item">
-        <span class="status-dot status-${statusClass(ciRun.conclusion)}"></span>
-        <span>CI</span>
-      </a>`;
+  if (ciRuns) {
+    statusHTML += `<span class="status-item"><span>CI</span> ${timelineHTML(ciRuns)}</span>`;
   } else if (workflows) {
-    statusHTML += `
-      <span class="status-item">
-        <span class="status-dot status-unknown"></span>
-        <span>CI</span>
-      </span>`;
+    statusHTML += `<span class="status-item">${statusDotHTML(null)} <span>CI</span></span>`;
   }
 
   if (isJuliaPkg(repo)) {
-    if (docsRun) {
-      statusHTML += `
-        <a href="${docsRun.html_url}" class="status-item">
-          <span class="status-dot status-${statusClass(docsRun.conclusion)}"></span>
-          <span>Docs</span>
-        </a>`;
+    if (docsRuns) {
+      statusHTML += `<span class="status-item"><span>Docs</span> ${timelineHTML(docsRuns)}</span>`;
     }
 
     if (repo.has_pages) {
@@ -116,8 +102,8 @@ function filterAndSort(repos, workflowMap, releasesMap, filters) {
     filtered.sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
   } else if (filters.sortBy === 'status') {
     filtered.sort((a, b) => {
-      const sa = workflowMap.get(a.name)?.['CI']?.conclusion ?? 'unknown';
-      const sb = workflowMap.get(b.name)?.['CI']?.conclusion ?? 'unknown';
+      const sa = getLatestRun(workflowMap.get(a.name)?.['CI'])?.conclusion ?? 'unknown';
+      const sb = getLatestRun(workflowMap.get(b.name)?.['CI'])?.conclusion ?? 'unknown';
       return (STATUS_ORDER[sa] ?? 3) - (STATUS_ORDER[sb] ?? 3);
     });
   }
@@ -125,7 +111,7 @@ function filterAndSort(repos, workflowMap, releasesMap, filters) {
   return filtered;
 }
 
-function getDocsRun(workflows) {
+function getDocsRuns(workflows) {
   if (!workflows) return null;
   const entry = Object.entries(workflows).find(([name]) => /docs|documentation/i.test(name));
   return entry ? entry[1] : null;
@@ -133,6 +119,18 @@ function getDocsRun(workflows) {
 
 function statusDotHTML(conclusion) {
   return `<span class="status-dot status-${statusClass(conclusion)}"></span>`;
+}
+
+function timelineHTML(runs) {
+  if (!runs || runs.length === 0) return '';
+  return `<span class="status-timeline">${runs.map(r =>
+    `<a href="${r.html_url}" class="status-bar status-${statusClass(r.conclusion)}" title="${r.conclusion ?? 'running'} — ${new Date(r.created_at).toLocaleDateString()}"></a>`
+  ).join('')}</span>`;
+}
+
+function getLatestRun(runs) {
+  if (!runs || runs.length === 0) return null;
+  return runs[runs.length - 1];
 }
 
 function pendingHTML(pending) {
@@ -197,23 +195,24 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
   const tbody = document.createElement('tbody');
   for (const repo of filtered) {
     const workflows = workflowMap.get(repo.name);
-    const ciRun = workflows?.['CI'];
-    const docsRun = getDocsRun(workflows);
+    const ciRuns = workflows?.['CI'];
+    const latestCI = getLatestRun(ciRuns);
+    const docsRuns = getDocsRuns(workflows);
     const pagesBase = repo.has_pages ? `https://rallypointone.github.io/${repo.name}/` : null;
 
     const tr = document.createElement('tr');
-    tr.dataset.status = ciRun?.conclusion ?? 'unknown';
+    tr.dataset.status = latestCI?.conclusion ?? 'unknown';
     tr.innerHTML = `
       <td>
         <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
         ${repo.description ? `<span class="table-desc">${escapeHTML(repo.description)}</span>` : ''}
       </td>
-      <td class="status-cell">${ciRun
-        ? `<a href="${ciRun.html_url}" class="status-item">${statusDotHTML(ciRun.conclusion)} ${ciRun.conclusion ?? 'running'}</a>`
-        : `<span class="text-muted">${statusDotHTML(null)} -</span>`}</td>
+      <td class="status-cell">${ciRuns
+        ? timelineHTML(ciRuns)
+        : `<span class="text-muted">-</span>`}</td>
       <td class="status-cell">${isJuliaPkg(repo)
-        ? (docsRun
-          ? `<a href="${docsRun.html_url}" class="status-item">${statusDotHTML(docsRun.conclusion)} ${docsRun.conclusion ?? 'running'}</a>`
+        ? (docsRuns
+          ? timelineHTML(docsRuns)
           : `<span class="text-muted">-</span>`)
         : ''}</td>
       <td class="links-cell">${isJuliaPkg(repo) && pagesBase
@@ -235,17 +234,18 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
   list.className = 'compact-list';
   for (const repo of filtered) {
     const workflows = workflowMap.get(repo.name);
-    const ciRun = workflows?.['CI'];
-    const docsRun = getDocsRun(workflows);
+    const ciRuns = workflows?.['CI'];
+    const latestCI = getLatestRun(ciRuns);
+    const docsRuns = getDocsRuns(workflows);
     const pagesBase = repo.has_pages ? `https://rallypointone.github.io/${repo.name}/` : null;
 
     const row = document.createElement('div');
     row.className = 'compact-row';
-    row.dataset.status = ciRun?.conclusion ?? 'unknown';
+    row.dataset.status = latestCI?.conclusion ?? 'unknown';
     row.innerHTML = `
-      <span class="compact-status">${statusDotHTML(ciRun?.conclusion)}</span>
+      <span class="compact-status">${ciRuns ? timelineHTML(ciRuns) : statusDotHTML(null)}</span>
       <a href="${repo.html_url}" class="compact-name">${repo.name}</a>
-      ${isJuliaPkg(repo) && docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
+      ${isJuliaPkg(repo) && docsRuns ? `<span class="compact-docs">${timelineHTML(docsRuns)} Docs</span>` : ''}
       ${isJuliaPkg(repo) && pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
       ${releaseHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}
       ${issuesHTML(repo, issueCountsMap.get(repo.name))}
