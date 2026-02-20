@@ -69,6 +69,14 @@ a:hover {
   font-weight: 600;
 }
 
+#header-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
 #refresh-btn {
   padding: 0.375rem 0.75rem;
   border: 1px solid var(--color-input-border);
@@ -532,18 +540,6 @@ a:hover {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-/* Footer */
-#footer {
-  padding: 0.75rem 1.5rem;
-  border-top: 1px solid var(--color-border);
-  background: var(--color-card);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
 }
 
 /* Responsive */
