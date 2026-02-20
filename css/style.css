@@ -298,7 +298,7 @@ a:hover {
 
 /* Status Timeline */
 .status-timeline {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 1px;
