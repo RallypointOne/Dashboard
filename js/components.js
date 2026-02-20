@@ -70,7 +70,6 @@ export function createRepoCard(repo, workflows, issueCounts, release, pending) {
     ${repo.description ? `<p class="repo-desc">${escapeHTML(repo.description)}</p>` : ''}
     <div class="status-row">${statusHTML}</div>
     <div class="card-footer">
-      ${repo.language ? `<span class="lang-badge">${repo.language}</span>` : ''}
       ${releaseHTML(release, pending)}
       <span class="meta">pushed ${timeAgo(repo.pushed_at)}</span>
       ${issuesHTML(repo, issueCounts)}
@@ -86,22 +85,8 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
-export function populateLanguageFilter(repos) {
-  const select = document.getElementById('filter-language');
-  const languages = [...new Set(repos.map(r => r.language).filter(Boolean))].sort();
-  // Keep the "All" option, remove any previously added options
-  while (select.options.length > 1) select.remove(1);
-  for (const lang of languages) {
-    const opt = document.createElement('option');
-    opt.value = lang;
-    opt.textContent = lang;
-    select.appendChild(opt);
-  }
-}
-
 export function getFilters() {
   return {
-    language: document.getElementById('filter-language').value,
     released: document.getElementById('filter-released').value,
     sortBy: document.getElementById('sort-by').value,
   };
@@ -112,9 +97,6 @@ const STATUS_ORDER = { failure: 0, in_progress: 1, queued: 2, unknown: 3, cancel
 function filterAndSort(repos, workflowMap, releasesMap, filters) {
   let filtered = [...repos];
 
-  if (filters.language) {
-    filtered = filtered.filter(r => r.language === filters.language);
-  }
   if (filters.released) {
     filtered = filtered.filter(r => {
       const hasRelease = !!releasesMap.get(r.name);
@@ -197,7 +179,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     <thead>
       <tr>
         <th>Repository</th>
-        <th>Language</th>
         <th>CI</th>
         <th>Docs</th>
         <th>Links</th>
@@ -221,7 +202,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
         <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
         ${repo.description ? `<span class="table-desc">${escapeHTML(repo.description)}</span>` : ''}
       </td>
-      <td>${repo.language ? `<span class="lang-badge">${repo.language}</span>` : '<span class="text-muted">-</span>'}</td>
       <td class="status-cell">${ciRun
         ? `<a href="${ciRun.html_url}" class="status-item">${statusDotHTML(ciRun.conclusion)} ${ciRun.conclusion ?? 'running'}</a>`
         : `<span class="text-muted">${statusDotHTML(null)} -</span>`}</td>
@@ -257,7 +237,6 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
     row.innerHTML = `
       <span class="compact-status">${statusDotHTML(ciRun?.conclusion)}</span>
       <a href="${repo.html_url}" class="compact-name">${repo.name}</a>
-      ${repo.language ? `<span class="lang-badge">${repo.language}</span>` : ''}
       ${docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
       ${pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
       ${releaseHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}
@@ -277,25 +256,6 @@ export function setView(view) {
   localStorage.setItem('gh_dashboard_view', view);
 }
 
-function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view) {
-  if (repos.length === 0) return;
-
-  const heading = document.createElement('h2');
-  heading.className = 'section-heading';
-  heading.textContent = label;
-  container.appendChild(heading);
-
-  const section = document.createElement('div');
-  if (view === 'table') {
-    renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else if (view === 'compact') {
-    renderCompact(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else {
-    renderCards(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  }
-  container.appendChild(section);
-}
-
 export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, filters, view) {
   container.innerHTML = '';
   container.className = '';
@@ -308,10 +268,12 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
     return;
   }
 
-  const juliaPackages = filtered.filter(r => r.name.endsWith('.jl'));
-  const other = filtered.filter(r => !r.name.endsWith('.jl'));
-
-  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
-  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
+  if (view === 'table') {
+    renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else if (view === 'compact') {
+    renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else {
+    renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  }
 }
 

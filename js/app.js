@@ -1,6 +1,5 @@
 import {
   renderDashboard,
-  populateLanguageFilter,
   getFilters,
   getView,
   setView,
@@ -50,7 +49,6 @@ async function loadDashboard() {
     cachedReleases = releasesMap;
     cachedPendingReleases = pendingReleasesMap;
 
-    populateLanguageFilter(repos);
     renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, getFilters(), getView());
 
     const mins = Math.round((Date.now() - new Date(data.generated_at)) / 60000);
@@ -69,7 +67,6 @@ function applyFilters() {
 }
 
 function initFilters() {
-  document.getElementById('filter-language').addEventListener('change', applyFilters);
   document.getElementById('filter-released').addEventListener('change', applyFilters);
   document.getElementById('sort-by').addEventListener('change', applyFilters);
 

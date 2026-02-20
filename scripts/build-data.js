@@ -137,8 +137,9 @@ async function fetchPendingRegistrations() {
 
 async function main() {
   console.log(`Fetching repos for ${ORG}...`);
-  const repos = await fetchAllRepos();
-  console.log(`Found ${repos.length} repos`);
+  const allRepos = await fetchAllRepos();
+  const repos = allRepos.filter(r => r.name.endsWith('.jl'));
+  console.log(`Found ${allRepos.length} repos, ${repos.length} Julia packages`);
 
   // Fetch all supplementary data in parallel
   const [workflowResults, releaseResults, issueResults, registryResults, pendingRegs] = await Promise.all([
