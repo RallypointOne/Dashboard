@@ -14,6 +14,10 @@ export function timeAgo(dateString) {
   return 'just now';
 }
 
+function isJuliaPkg(repo) {
+  return repo.name.endsWith('.jl');
+}
+
 function statusClass(conclusion) {
   if (!conclusion) return 'unknown';
   return conclusion; // success, failure, cancelled, etc.
@@ -49,18 +53,20 @@ export function createRepoCard(repo, workflows, issueCounts, release, pending) {
       </span>`;
   }
 
-  if (docsRun) {
-    statusHTML += `
-      <a href="${docsRun.html_url}" class="status-item">
-        <span class="status-dot status-${statusClass(docsRun.conclusion)}"></span>
-        <span>Docs</span>
-      </a>`;
-  }
+  if (isJuliaPkg(repo)) {
+    if (docsRun) {
+      statusHTML += `
+        <a href="${docsRun.html_url}" class="status-item">
+          <span class="status-dot status-${statusClass(docsRun.conclusion)}"></span>
+          <span>Docs</span>
+        </a>`;
+    }
 
-  if (repo.has_pages) {
-    const pagesBase = `https://rallypointone.github.io/${repo.name}/`;
-    statusHTML += `<a href="${pagesBase}" class="docs-link">Docs Site</a>`;
-    statusHTML += `<a href="${pagesBase}dev/coverage/" class="coverage-link">Coverage</a>`;
+    if (repo.has_pages) {
+      const pagesBase = `https://rallypointone.github.io/${repo.name}/`;
+      statusHTML += `<a href="${pagesBase}" class="docs-link">Docs Site</a>`;
+      statusHTML += `<a href="${pagesBase}dev/coverage/" class="coverage-link">Coverage</a>`;
+    }
   }
 
   card.innerHTML = `
@@ -205,12 +211,14 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
       <td class="status-cell">${ciRun
         ? `<a href="${ciRun.html_url}" class="status-item">${statusDotHTML(ciRun.conclusion)} ${ciRun.conclusion ?? 'running'}</a>`
         : `<span class="text-muted">${statusDotHTML(null)} -</span>`}</td>
-      <td class="status-cell">${docsRun
-        ? `<a href="${docsRun.html_url}" class="status-item">${statusDotHTML(docsRun.conclusion)} ${docsRun.conclusion ?? 'running'}</a>`
-        : `<span class="text-muted">-</span>`}</td>
-      <td class="links-cell">${pagesBase
+      <td class="status-cell">${isJuliaPkg(repo)
+        ? (docsRun
+          ? `<a href="${docsRun.html_url}" class="status-item">${statusDotHTML(docsRun.conclusion)} ${docsRun.conclusion ?? 'running'}</a>`
+          : `<span class="text-muted">-</span>`)
+        : ''}</td>
+      <td class="links-cell">${isJuliaPkg(repo) && pagesBase
         ? `<a href="${pagesBase}">Docs</a> &middot; <a href="${pagesBase}dev/coverage/">Coverage</a>`
-        : '<span class="text-muted">-</span>'}</td>
+        : isJuliaPkg(repo) ? '<span class="text-muted">-</span>' : ''}</td>
       <td>${releaseTableHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}</td>
       <td class="issues-cell">${issuesTableHTML(repo, issueCountsMap.get(repo.name))}</td>
       <td class="meta">${timeAgo(repo.pushed_at)}</td>
@@ -237,8 +245,8 @@ function renderCompact(container, filtered, workflowMap, issueCountsMap, release
     row.innerHTML = `
       <span class="compact-status">${statusDotHTML(ciRun?.conclusion)}</span>
       <a href="${repo.html_url}" class="compact-name">${repo.name}</a>
-      ${docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
-      ${pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
+      ${isJuliaPkg(repo) && docsRun ? `<span class="compact-docs">${statusDotHTML(docsRun.conclusion)} Docs</span>` : ''}
+      ${isJuliaPkg(repo) && pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
       ${releaseHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}
       ${issuesHTML(repo, issueCountsMap.get(repo.name))}
       <span class="compact-pushed">${timeAgo(repo.pushed_at)}</span>
@@ -256,6 +264,25 @@ export function setView(view) {
   localStorage.setItem('gh_dashboard_view', view);
 }
 
+function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view) {
+  if (repos.length === 0) return;
+
+  const heading = document.createElement('h2');
+  heading.className = 'section-heading';
+  heading.textContent = label;
+  container.appendChild(heading);
+
+  const section = document.createElement('div');
+  if (view === 'table') {
+    renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else if (view === 'compact') {
+    renderCompact(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  } else {
+    renderCards(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
+  }
+  container.appendChild(section);
+}
+
 export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, filters, view) {
   container.innerHTML = '';
   container.className = '';
@@ -268,12 +295,10 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
     return;
   }
 
-  if (view === 'table') {
-    renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else if (view === 'compact') {
-    renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  } else {
-    renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap);
-  }
+  const juliaPackages = filtered.filter(r => isJuliaPkg(r));
+  const other = filtered.filter(r => !isJuliaPkg(r));
+
+  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
+  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, view);
 }
 
