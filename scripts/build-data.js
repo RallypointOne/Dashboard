@@ -51,7 +51,7 @@ async function fetchWorkflowRuns(repo, branch) {
     });
   }
   // Keep last 20 per workflow, reversed so oldest come first (for left-to-right timeline)
-  for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 20).reverse());
+  for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 15).reverse());
   return Object.fromEntries(grouped);
 }
 
