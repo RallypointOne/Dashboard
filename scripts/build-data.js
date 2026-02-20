@@ -137,8 +137,10 @@ async function fetchPendingRegistrations() {
 
 async function main() {
   console.log(`Fetching repos for ${ORG}...`);
-  const repos = await fetchAllRepos();
-  console.log(`Found ${repos.length} repos`);
+  let allRepos = await fetchAllRepos();
+  console.log(`Found ${allRepos.length} repos`);
+  const repos = allRepos.filter(r => !r.topics?.includes('no-dashboard'));
+  console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded via "no-dashboard" topic)`);
 
   // Fetch all supplementary data in parallel
   const [workflowResults, releaseResults, issueResults, registryResults, pendingRegs] = await Promise.all([
