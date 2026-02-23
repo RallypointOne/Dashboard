@@ -492,9 +492,10 @@ a:hover {
   font-size: 0.8rem;
 }
 
-.links-cell {
-  white-space: nowrap;
+.repo-links {
+  display: inline;
   font-size: 0.8rem;
+  margin-left: 0.5rem;
 }
 
 .text-muted {

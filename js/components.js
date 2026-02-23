@@ -211,7 +211,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
         <th>Repository</th>
         <th>CI</th>
         <th>Docs</th>
-        <th>Links</th>
         <th>Release</th>
         <th>Issues</th>
         <th>Last Pushed</th>
@@ -230,18 +229,19 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     const tr = document.createElement('tr');
     tr.dataset.status = latestCI?.conclusion ?? 'unknown';
 
-    let linksCell = '';
+    let repoLinks = '';
     if (isJuliaPkg(repo)) {
       const parts = [];
-      if (pagesBase) parts.push(`<a href="${pagesBase}">Docs</a>`);
+      if (pagesBase) parts.push(`<a href="${pagesBase}" class="docs-link">Docs</a>`);
       const cov = coverageHTML(repo, covPct);
       if (cov) parts.push(cov);
-      linksCell = parts.length > 0 ? parts.join(' &middot; ') : '<span class="text-muted">-</span>';
+      if (parts.length > 0) repoLinks = `<span class="repo-links">${parts.join(' &middot; ')}</span>`;
     }
 
     tr.innerHTML = `
       <td>
         <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
+        ${repoLinks}
         ${repo.description ? `<span class="table-desc">${escapeHTML(repo.description)}</span>` : ''}
       </td>
       <td class="status-cell">${ciRuns
@@ -252,7 +252,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
           ? timelineHTML(docsRuns)
           : `<span class="text-muted">-</span>`)
         : ''}</td>
-      <td class="links-cell">${linksCell}</td>
       <td>${releaseTableHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}</td>
       <td class="issues-cell">${issuesTableHTML(repo, issueCountsMap.get(repo.name))}</td>
       <td class="meta">${timeAgo(repo.pushed_at)}</td>
