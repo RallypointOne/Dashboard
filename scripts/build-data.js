@@ -127,6 +127,21 @@ async function fetchRegistryVersion(repoName) {
   return { version: `v${latest}`, registry_url: `https://juliahub.com/ui/Packages/General/${pkgName}`, published_at };
 }
 
+async function fetchCoverage(repoName) {
+  if (!repoName.endsWith('.jl')) return null;
+  const url = `https://rallypointone.github.io/${repoName}/dev/coverage/index.html`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const match = html.match(/headerCovTableEntry\w+">\s*(\d+\.?\d*)\s*%/);
+    if (!match) return null;
+    return parseFloat(match[1]);
+  } catch {
+    return null;
+  }
+}
+
 async function fetchPendingRegistrations() {
   // Search for open PRs in JuliaRegistries/General mentioning the org
   let data;
@@ -167,7 +182,7 @@ async function main() {
   console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded)`);
 
   // Fetch all supplementary data in parallel
-  const [workflowResults, releaseResults, issueResults, registryResults, pendingRegs] = await Promise.all([
+  const [workflowResults, releaseResults, issueResults, registryResults, coverageResults, pendingRegs] = await Promise.all([
     Promise.allSettled(
       repos.map(repo =>
         fetchWorkflowRuns(repo.name, repo.default_branch || 'main')
@@ -190,6 +205,12 @@ async function main() {
       repos.map(repo =>
         fetchRegistryVersion(repo.name)
           .then(reg => ({ name: repo.name, reg }))
+      )
+    ),
+    Promise.allSettled(
+      repos.map(repo =>
+        fetchCoverage(repo.name)
+          .then(pct => ({ name: repo.name, pct }))
       )
     ),
     fetchPendingRegistrations(),
@@ -223,7 +244,15 @@ async function main() {
     }
   }
 
+  const coverage = {};
+  for (const result of coverageResults) {
+    if (result.status === 'fulfilled' && result.value.pct != null) {
+      coverage[result.value.name] = result.value.pct;
+    }
+  }
+
   console.log(`Registry entries: ${Object.keys(registry).length}`);
+  console.log(`Coverage entries: ${Object.keys(coverage).length}`);
   console.log(`Pending registrations: ${Object.keys(pendingRegs).length}`);
 
   const data = {
@@ -233,6 +262,7 @@ async function main() {
     issue_counts,
     releases,
     registry,
+    coverage,
     pending_releases: pendingRegs,
   };
 

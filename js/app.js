@@ -10,6 +10,7 @@ let cachedWorkflows = new Map();
 let cachedIssueCounts = new Map();
 let cachedReleases = new Map();
 let cachedPendingReleases = new Map();
+let cachedCoverage = new Map();
 
 async function loadDashboard() {
   const dashboard = document.getElementById('dashboard');
@@ -43,13 +44,16 @@ async function loadDashboard() {
       }
     }
 
+    const coverageMap = new Map(Object.entries(data.coverage || {}));
+
     cachedRepos = repos;
     cachedWorkflows = workflowMap;
     cachedIssueCounts = issueCountsMap;
     cachedReleases = releasesMap;
     cachedPendingReleases = pendingReleasesMap;
+    cachedCoverage = coverageMap;
 
-    renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, getFilters(), getView());
+    renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, getFilters(), getView());
 
     const mins = Math.round((Date.now() - new Date(data.generated_at)) / 60000);
     document.getElementById('last-refreshed').textContent =
@@ -63,7 +67,7 @@ async function loadDashboard() {
 function applyFilters() {
   if (cachedRepos.length === 0) return;
   const dashboard = document.getElementById('dashboard');
-  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, getFilters(), getView());
+  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, getFilters(), getView());
 }
 
 function initFilters() {
