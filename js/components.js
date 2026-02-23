@@ -23,102 +23,65 @@ function statusClass(conclusion) {
   return conclusion; // success, failure, cancelled, etc.
 }
 
-export function createRepoCard(repo, workflows, issueCounts, release, pending, coveragePct) {
-  const card = document.createElement('div');
-  card.className = 'repo-card';
-
-  const ciRuns = workflows?.['CI'];
-  const latestCI = getLatestRun(ciRuns);
-  const overallStatus = latestCI?.conclusion ?? 'unknown';
-  card.dataset.status = overallStatus;
-  card.dataset.language = repo.language || '';
-
-  const docsRuns = getDocsRuns(workflows);
-
-  let statusHTML = '';
-
-  if (ciRuns) {
-    statusHTML += `<span class="status-item"><span>CI</span> ${timelineHTML(ciRuns)}</span>`;
-  } else if (workflows) {
-    statusHTML += `<span class="status-item">${statusDotHTML(null)} <span>CI</span></span>`;
-  }
-
-  if (isJuliaPkg(repo)) {
-    if (docsRuns) {
-      statusHTML += `<span class="status-item"><span>Docs</span> ${timelineHTML(docsRuns)}</span>`;
-    }
-
-    if (repo.has_pages) {
-      const pagesBase = `https://rallypointone.github.io/${repo.name}/`;
-      statusHTML += `<a href="${pagesBase}" class="docs-link">Docs Site</a>`;
-    }
-    statusHTML += coverageHTML(repo, coveragePct);
-  }
-
-  card.innerHTML = `
-    <div class="card-header">
-      <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
-    </div>
-    ${repo.description ? `<p class="repo-desc">${escapeHTML(repo.description)}</p>` : ''}
-    <div class="status-row">${statusHTML}</div>
-    <div class="card-footer">
-      ${releaseHTML(release, pending)}
-      <span class="meta">pushed ${timeAgo(repo.pushed_at)}</span>
-      ${issuesHTML(repo, issueCounts)}
-    </div>
-  `;
-
-  return card;
-}
-
 function escapeHTML(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
 
-export function getFilters() {
-  return {
-    released: document.getElementById('filter-released').value,
-    sortBy: document.getElementById('sort-by').value,
-  };
-}
-
 const STATUS_ORDER = { failure: 0, in_progress: 1, queued: 2, unknown: 3, cancelled: 4, success: 5 };
 
-function filterAndSort(repos, workflowMap, releasesMap, filters) {
-  let filtered = [...repos];
+function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, sortState) {
+  const sorted = [...repos];
+  const dir = sortState.dir === 'asc' ? 1 : -1;
 
-  if (filters.released) {
-    filtered = filtered.filter(r => {
-      const hasRelease = !!releasesMap.get(r.name);
-      return filters.released === 'yes' ? hasRelease : !hasRelease;
-    });
-  }
+  sorted.sort((a, b) => {
+    let cmp = 0;
+    switch (sortState.col) {
+      case 'name':
+        cmp = a.name.localeCompare(b.name);
+        break;
+      case 'ci': {
+        const sa = getLatestRun(workflowMap.get(a.name)?.['CI'])?.conclusion ?? 'unknown';
+        const sb = getLatestRun(workflowMap.get(b.name)?.['CI'])?.conclusion ?? 'unknown';
+        cmp = (STATUS_ORDER[sa] ?? 3) - (STATUS_ORDER[sb] ?? 3);
+        break;
+      }
+      case 'docs': {
+        const da = getDocsRuns(workflowMap.get(a.name));
+        const db = getDocsRuns(workflowMap.get(b.name));
+        const sa = da ? (getLatestRun(da)?.conclusion ?? 'unknown') : 'zzz';
+        const sb = db ? (getLatestRun(db)?.conclusion ?? 'unknown') : 'zzz';
+        cmp = (STATUS_ORDER[sa] ?? 3) - (STATUS_ORDER[sb] ?? 3);
+        break;
+      }
+      case 'release': {
+        const ra = releasesMap.get(a.name)?.tag_name ?? '';
+        const rb = releasesMap.get(b.name)?.tag_name ?? '';
+        cmp = ra.localeCompare(rb);
+        break;
+      }
+      case 'issues': {
+        const oa = issueCountsMap.get(a.name)?.open ?? 0;
+        const ob = issueCountsMap.get(b.name)?.open ?? 0;
+        cmp = oa - ob;
+        break;
+      }
+      case 'pushed':
+      default:
+        cmp = new Date(a.pushed_at) - new Date(b.pushed_at);
+        break;
+    }
+    return cmp * dir;
+  });
 
-  if (filters.sortBy === 'name') {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (filters.sortBy === 'pushed') {
-    filtered.sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
-  } else if (filters.sortBy === 'status') {
-    filtered.sort((a, b) => {
-      const sa = getLatestRun(workflowMap.get(a.name)?.['CI'])?.conclusion ?? 'unknown';
-      const sb = getLatestRun(workflowMap.get(b.name)?.['CI'])?.conclusion ?? 'unknown';
-      return (STATUS_ORDER[sa] ?? 3) - (STATUS_ORDER[sb] ?? 3);
-    });
-  }
-
-  return filtered;
+  return sorted;
 }
 
 function getDocsRuns(workflows) {
   if (!workflows) return null;
   const entry = Object.entries(workflows).find(([name]) => /docs|documentation/i.test(name));
   return entry ? entry[1] : null;
-}
-
-function statusDotHTML(conclusion) {
-  return `<span class="status-dot status-${statusClass(conclusion)}"></span>`;
 }
 
 function timelineHTML(runs) {
@@ -154,13 +117,6 @@ function pendingHTML(pending) {
   return `<a href="${pending.html_url}" class="pending-badge">${pending.version} pending</a>`;
 }
 
-function releaseHTML(release, pending) {
-  const parts = [];
-  if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a>`);
-  if (pending) parts.push(pendingHTML(pending));
-  return parts.join(' ') || '';
-}
-
 function releaseTableHTML(release, pending) {
   const parts = [];
   if (release) parts.push(`<a href="${release.html_url}" class="release-badge">${release.tag_name}</a>${release.published_at ? `<span class="meta"> ${timeAgo(release.published_at)}</span>` : ''}`);
@@ -179,14 +135,6 @@ function coverageHTML(repo, coveragePct) {
   return `<a href="${url}" class="coverage-link">Coverage</a>`;
 }
 
-function issuesHTML(repo, counts) {
-  const url = repo.html_url + '/issues';
-  const open = counts?.open ?? 0;
-  const closed = counts?.closed ?? 0;
-  if (open === 0 && closed === 0) return '';
-  return `<span class="issues-group"><a href="${url}?q=is%3Aissue+is%3Aopen" class="issues-open">${open} open</a> / <a href="${url}?q=is%3Aissue+is%3Aclosed" class="issues-closed">${closed} closed</a></span>`;
-}
-
 function issuesTableHTML(repo, counts) {
   const url = repo.html_url + '/issues';
   const open = counts?.open ?? 0;
@@ -194,29 +142,37 @@ function issuesTableHTML(repo, counts) {
   return `<a href="${url}?q=is%3Aissue+is%3Aopen" class="issues-open">${open}</a> / <a href="${url}?q=is%3Aissue+is%3Aclosed" class="issues-closed">${closed}</a>`;
 }
 
-function renderCards(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap) {
-  container.className = 'view-cards';
-  for (const repo of filtered) {
-    container.appendChild(createRepoCard(repo, workflowMap.get(repo.name), issueCountsMap.get(repo.name), releasesMap.get(repo.name), pendingReleasesMap.get(repo.name), coverageMap.get(repo.name)));
-  }
+function sortIndicator(col, sortState) {
+  if (sortState.col !== col) return '';
+  return sortState.dir === 'asc' ? ' \u25B2' : ' \u25BC';
 }
 
-function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap) {
+function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort) {
   container.className = 'view-table';
   const table = document.createElement('table');
   table.className = 'repo-table';
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Repository</th>
-        <th>CI</th>
-        <th>Docs</th>
-        <th>Release</th>
-        <th>Issues</th>
-        <th>Last Pushed</th>
-      </tr>
-    </thead>
-  `;
+
+  const columns = [
+    { label: 'Repository', key: 'name' },
+    { label: 'CI', key: 'ci' },
+    { label: 'Docs', key: 'docs' },
+    { label: 'Release', key: 'release' },
+    { label: 'Issues', key: 'issues' },
+    { label: 'Last Pushed', key: 'pushed' },
+  ];
+
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  for (const col of columns) {
+    const th = document.createElement('th');
+    th.className = 'sortable';
+    if (sortState.col === col.key) th.classList.add('sorted');
+    th.textContent = col.label + sortIndicator(col.key, sortState);
+    th.addEventListener('click', () => onSort(col.key));
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
   const tbody = document.createElement('tbody');
   for (const repo of filtered) {
     const workflows = workflowMap.get(repo.name);
@@ -262,44 +218,7 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
   container.appendChild(table);
 }
 
-function renderCompact(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap) {
-  container.className = 'view-compact';
-  const list = document.createElement('div');
-  list.className = 'compact-list';
-  for (const repo of filtered) {
-    const workflows = workflowMap.get(repo.name);
-    const ciRuns = workflows?.['CI'];
-    const latestCI = getLatestRun(ciRuns);
-    const docsRuns = getDocsRuns(workflows);
-    const pagesBase = repo.has_pages ? `https://rallypointone.github.io/${repo.name}/` : null;
-
-    const row = document.createElement('div');
-    row.className = 'compact-row';
-    row.dataset.status = latestCI?.conclusion ?? 'unknown';
-    row.innerHTML = `
-      <span class="compact-status">${ciRuns ? timelineHTML(ciRuns) : statusDotHTML(null)}</span>
-      <a href="${repo.html_url}" class="compact-name">${repo.name}</a>
-      ${isJuliaPkg(repo) && docsRuns ? `<span class="compact-docs">${timelineHTML(docsRuns)} Docs</span>` : ''}
-      ${isJuliaPkg(repo) && pagesBase ? `<a href="${pagesBase}" class="compact-link">Docs Site</a>` : ''}
-      ${coverageHTML(repo, coverageMap.get(repo.name))}
-      ${releaseHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}
-      ${issuesHTML(repo, issueCountsMap.get(repo.name))}
-      <span class="compact-pushed">${timeAgo(repo.pushed_at)}</span>
-    `;
-    list.appendChild(row);
-  }
-  container.appendChild(list);
-}
-
-export function getView() {
-  return localStorage.getItem('gh_dashboard_view') || 'table';
-}
-
-export function setView(view) {
-  localStorage.setItem('gh_dashboard_view', view);
-}
-
-function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, view) {
+function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort) {
   if (repos.length === 0) return;
 
   const heading = document.createElement('h2');
@@ -308,32 +227,23 @@ function renderSection(container, label, repos, workflowMap, issueCountsMap, rel
   container.appendChild(heading);
 
   const section = document.createElement('div');
-  if (view === 'table') {
-    renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap);
-  } else if (view === 'compact') {
-    renderCompact(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap);
-  } else {
-    renderCards(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap);
-  }
+  renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort);
   container.appendChild(section);
 }
 
-export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, filters, view) {
+export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort) {
   container.innerHTML = '';
   container.className = '';
 
-  const filtered = filterAndSort(repos, workflowMap, releasesMap, filters);
-
-  if (filtered.length === 0) {
-    container.className = 'view-cards';
-    container.innerHTML = '<div class="loading">No repositories match the current filters.</div>';
+  if (repos.length === 0) {
+    container.innerHTML = '<div class="loading">No repositories found.</div>';
     return;
   }
 
-  const juliaPackages = filtered.filter(r => isJuliaPkg(r));
-  const other = filtered.filter(r => !isJuliaPkg(r));
+  const juliaPackages = sortRepos(repos.filter(r => isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, sortState);
+  const other = sortRepos(repos.filter(r => !isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, sortState);
 
-  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, view);
-  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, view);
+  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort);
+  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, sortState, onSort);
 }
 

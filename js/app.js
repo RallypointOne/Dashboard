@@ -1,9 +1,4 @@
-import {
-  renderDashboard,
-  getFilters,
-  getView,
-  setView,
-} from './components.js';
+import { renderDashboard } from './components.js';
 
 let cachedRepos = [];
 let cachedWorkflows = new Map();
@@ -11,6 +6,24 @@ let cachedIssueCounts = new Map();
 let cachedReleases = new Map();
 let cachedPendingReleases = new Map();
 let cachedCoverage = new Map();
+
+let sortState = { col: 'pushed', dir: 'desc' };
+
+function render() {
+  if (cachedRepos.length === 0) return;
+  const dashboard = document.getElementById('dashboard');
+  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, sortState, onSort);
+}
+
+function onSort(col) {
+  if (sortState.col === col) {
+    sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortState.col = col;
+    sortState.dir = col === 'name' ? 'asc' : 'desc';
+  }
+  render();
+}
 
 async function loadDashboard() {
   const dashboard = document.getElementById('dashboard');
@@ -31,7 +44,6 @@ async function loadDashboard() {
     const issueCountsMap = new Map(Object.entries(data.issue_counts));
     const pendingReleasesMap = new Map(Object.entries(data.pending_releases || {}));
 
-    // Build releasesMap: prefer GitHub Release, fall back to General registry
     const releasesMap = new Map(Object.entries(data.releases));
     const registryMap = data.registry || {};
     for (const [name, reg] of Object.entries(registryMap)) {
@@ -53,7 +65,7 @@ async function loadDashboard() {
     cachedPendingReleases = pendingReleasesMap;
     cachedCoverage = coverageMap;
 
-    renderDashboard(dashboard, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, getFilters(), getView());
+    render();
 
     const mins = Math.round((Date.now() - new Date(data.generated_at)) / 60000);
     document.getElementById('last-refreshed').textContent =
@@ -64,31 +76,6 @@ async function loadDashboard() {
   }
 }
 
-function applyFilters() {
-  if (cachedRepos.length === 0) return;
-  const dashboard = document.getElementById('dashboard');
-  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, getFilters(), getView());
-}
-
-function initFilters() {
-  document.getElementById('filter-released').addEventListener('change', applyFilters);
-  document.getElementById('sort-by').addEventListener('change', applyFilters);
-
-  const viewBtns = document.querySelectorAll('.view-btn');
-  const saved = getView();
-  viewBtns.forEach(btn => {
-    if (btn.dataset.view === saved) btn.classList.add('active');
-    else btn.classList.remove('active');
-    btn.addEventListener('click', () => {
-      viewBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      setView(btn.dataset.view);
-      applyFilters();
-    });
-  });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  initFilters();
   loadDashboard();
 });
