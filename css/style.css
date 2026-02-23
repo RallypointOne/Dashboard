@@ -319,6 +319,7 @@ a:hover {
 
 .status-bar-latest {
   width: 8px;
+  margin-left: 3px;
 }
 
 .bar-segment {
