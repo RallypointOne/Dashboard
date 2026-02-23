@@ -34,6 +34,15 @@ async function fetchAllRepos() {
   return allRepos;
 }
 
+async function fetchRunJobs(repo, runId) {
+  const data = await apiFetch(`/repos/${ORG}/${repo}/actions/runs/${runId}/jobs`);
+  if (!data || !data.jobs) return null;
+  const total = data.jobs.length;
+  const passed = data.jobs.filter(j => j.conclusion === 'success' || j.conclusion === 'skipped').length;
+  const failed = data.jobs.filter(j => j.conclusion === 'failure').length;
+  return { total, passed, failed };
+}
+
 async function fetchWorkflowRuns(repo, branch) {
   const data = await apiFetch(
     `/repos/${ORG}/${repo}/actions/runs?per_page=100&branch=${encodeURIComponent(branch)}`
@@ -44,14 +53,29 @@ async function fetchWorkflowRuns(repo, branch) {
   for (const run of data.workflow_runs) {
     if (!grouped.has(run.name)) grouped.set(run.name, []);
     grouped.get(run.name).push({
+      id: run.id,
       status: run.status,
       conclusion: run.conclusion,
       html_url: run.html_url,
       created_at: run.created_at,
     });
   }
-  // Keep last 20 per workflow, reversed so oldest come first (for left-to-right timeline)
-  for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 15).reverse());
+  // Keep last 10 per workflow, reversed so oldest come first (for left-to-right timeline)
+  for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 10).reverse());
+
+  // Fetch job stats for each run
+  for (const [key, runs] of grouped) {
+    const jobResults = await Promise.allSettled(
+      runs.map(run => fetchRunJobs(repo, run.id))
+    );
+    for (let i = 0; i < runs.length; i++) {
+      if (jobResults[i].status === 'fulfilled' && jobResults[i].value) {
+        runs[i].jobs = jobResults[i].value;
+      }
+      delete runs[i].id;
+    }
+  }
+
   return Object.fromEntries(grouped);
 }
 
@@ -139,8 +163,8 @@ async function main() {
   console.log(`Fetching repos for ${ORG}...`);
   let allRepos = await fetchAllRepos();
   console.log(`Found ${allRepos.length} repos`);
-  const repos = allRepos.filter(r => !r.topics?.includes('no-dashboard'));
-  console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded via "no-dashboard" topic)`);
+  const repos = allRepos.filter(r => !r.archived && !r.topics?.includes('no-dashboard'));
+  console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded)`);
 
   // Fetch all supplementary data in parallel
   const [workflowResults, releaseResults, issueResults, registryResults, pendingRegs] = await Promise.all([

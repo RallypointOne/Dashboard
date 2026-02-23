@@ -123,9 +123,25 @@ function statusDotHTML(conclusion) {
 
 function timelineHTML(runs) {
   if (!runs || runs.length === 0) return '';
-  return `<span class="status-timeline">${runs.map(r =>
-    `<a href="${r.html_url}" class="status-bar status-${statusClass(r.conclusion)}" title="${r.conclusion ?? 'running'} — ${new Date(r.created_at).toLocaleDateString()}"></a>`
-  ).join('')}</span>`;
+  return `<span class="status-timeline">${runs.map((r, i) => {
+    const isLatest = i === runs.length - 1;
+    const latestCls = isLatest ? ' status-bar-latest' : '';
+    const date = new Date(r.created_at).toLocaleDateString();
+
+    if (r.jobs && r.jobs.total > 0) {
+      const passPct = (r.jobs.passed / r.jobs.total) * 100;
+      const failPct = (r.jobs.failed / r.jobs.total) * 100;
+      const otherPct = 100 - passPct - failPct;
+      const title = `${r.jobs.passed}/${r.jobs.total} passed — ${date}`;
+      let segments = '';
+      if (failPct > 0) segments += `<span class="bar-segment bar-fail" style="height:${failPct}%"></span>`;
+      if (otherPct > 0) segments += `<span class="bar-segment bar-other" style="height:${otherPct}%"></span>`;
+      if (passPct > 0) segments += `<span class="bar-segment bar-pass" style="height:${passPct}%"></span>`;
+      return `<a href="${r.html_url}" class="status-bar status-bar-stacked${latestCls}" title="${title}">${segments}</a>`;
+    }
+
+    return `<a href="${r.html_url}" class="status-bar status-${statusClass(r.conclusion)}${latestCls}" title="${r.conclusion ?? 'running'} — ${date}"></a>`;
+  }).join('')}</span>`;
 }
 
 function getLatestRun(runs) {
