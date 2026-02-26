@@ -142,6 +142,11 @@ async function fetchCoverage(repoName) {
   }
 }
 
+async function fetchPRCounts(repo) {
+  const data = await apiFetch(`/search/issues?q=repo:${ORG}/${repo}+type:pr+state:open&per_page=1`);
+  return { open: data?.total_count ?? 0 };
+}
+
 async function fetchPendingRegistrations() {
   // Search for open PRs in JuliaRegistries/General mentioning the org
   let data;
@@ -182,7 +187,7 @@ async function main() {
   console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded)`);
 
   // Fetch all supplementary data in parallel
-  const [workflowResults, releaseResults, issueResults, registryResults, coverageResults, pendingRegs] = await Promise.all([
+  const [workflowResults, releaseResults, issueResults, registryResults, coverageResults, prResults, pendingRegs] = await Promise.all([
     Promise.allSettled(
       repos.map(repo =>
         fetchWorkflowRuns(repo.name, repo.default_branch || 'main')
@@ -211,6 +216,12 @@ async function main() {
       repos.map(repo =>
         fetchCoverage(repo.name)
           .then(pct => ({ name: repo.name, pct }))
+      )
+    ),
+    Promise.allSettled(
+      repos.map(repo =>
+        fetchPRCounts(repo.name)
+          .then(counts => ({ name: repo.name, counts }))
       )
     ),
     fetchPendingRegistrations(),
@@ -251,6 +262,13 @@ async function main() {
     }
   }
 
+  const pr_counts = {};
+  for (const result of prResults) {
+    if (result.status === 'fulfilled') {
+      pr_counts[result.value.name] = result.value.counts;
+    }
+  }
+
   console.log(`Registry entries: ${Object.keys(registry).length}`);
   console.log(`Coverage entries: ${Object.keys(coverage).length}`);
   console.log(`Pending registrations: ${Object.keys(pendingRegs).length}`);
@@ -260,6 +278,7 @@ async function main() {
     repos,
     workflows,
     issue_counts,
+    pr_counts,
     releases,
     registry,
     coverage,
