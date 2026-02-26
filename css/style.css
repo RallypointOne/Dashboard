@@ -209,6 +209,7 @@ a:hover {
 .issues-cell {
   font-size: 0.8rem;
   white-space: nowrap;
+  text-align: center;
 }
 
 .issues-open {
@@ -243,7 +244,7 @@ a:hover {
 
 .repo-table th {
   text-align: left;
-  padding: 0.6rem 0.75rem;
+  padding: 0.4rem 0.5rem;
   font-weight: 600;
   font-size: 0.8rem;
   color: var(--color-text-secondary);
@@ -263,7 +264,7 @@ a:hover {
 }
 
 .repo-table td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.35rem 0.5rem;
   border-bottom: 1px solid var(--color-border);
   vertical-align: middle;
 }
@@ -290,14 +291,20 @@ a:hover {
 }
 
 .repo-table .repo-name {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+}
+
+.num-cell {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .table-desc {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-text-secondary);
-  max-width: 300px;
+  max-width: 250px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -361,7 +368,7 @@ a:hover {
 
   .repo-table th,
   .repo-table td {
-    padding: 0.4rem 0.5rem;
+    padding: 0.3rem 0.35rem;
   }
 
   .table-desc {

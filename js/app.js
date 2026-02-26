@@ -7,13 +7,14 @@ let cachedReleases = new Map();
 let cachedPendingReleases = new Map();
 let cachedCoverage = new Map();
 let cachedPRCounts = new Map();
+let cachedTraffic = new Map();
 
 let sortState = { col: 'pushed', dir: 'desc' };
 
 function render() {
   if (cachedRepos.length === 0) return;
   const dashboard = document.getElementById('dashboard');
-  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, cachedPRCounts, sortState, onSort);
+  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, cachedPRCounts, cachedTraffic, sortState, onSort);
 }
 
 function onSort(col) {
@@ -59,6 +60,7 @@ async function loadDashboard() {
 
     const coverageMap = new Map(Object.entries(data.coverage || {}));
     const prCountsMap = new Map(Object.entries(data.pr_counts || {}));
+    const trafficMap = new Map(Object.entries(data.traffic || {}));
 
     cachedRepos = repos;
     cachedWorkflows = workflowMap;
@@ -67,6 +69,7 @@ async function loadDashboard() {
     cachedPendingReleases = pendingReleasesMap;
     cachedCoverage = coverageMap;
     cachedPRCounts = prCountsMap;
+    cachedTraffic = trafficMap;
 
     render();
 

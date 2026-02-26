@@ -31,7 +31,7 @@ function escapeHTML(str) {
 
 const STATUS_ORDER = { failure: 0, in_progress: 1, queued: 2, unknown: 3, cancelled: 4, success: 5 };
 
-function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap, sortState) {
+function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState) {
   const sorted = [...repos];
   const dir = sortState.dir === 'asc' ? 1 : -1;
 
@@ -71,6 +71,15 @@ function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap,
         const pa = prCountsMap.get(a.name)?.open ?? 0;
         const pb = prCountsMap.get(b.name)?.open ?? 0;
         cmp = pa - pb;
+        break;
+      }
+      case 'stars':
+        cmp = (a.stargazers_count ?? 0) - (b.stargazers_count ?? 0);
+        break;
+      case 'traffic': {
+        const ta = trafficMap.get(a.name)?.uniques ?? 0;
+        const tb = trafficMap.get(b.name)?.uniques ?? 0;
+        cmp = ta - tb;
         break;
       }
       case 'pushed':
@@ -159,7 +168,7 @@ function prsTableHTML(repo, counts) {
   return `<a href="${url}">${open}</a>`;
 }
 
-function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort) {
+function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
   container.className = 'view-table';
   const table = document.createElement('table');
   table.className = 'repo-table';
@@ -171,6 +180,8 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     { label: 'Release', key: 'release' },
     { label: 'Issues', key: 'issues' },
     { label: 'PRs', key: 'prs' },
+    { label: 'Stars', key: 'stars' },
+    { label: 'Traffic', key: 'traffic' },
     { label: 'Last Pushed', key: 'pushed' },
   ];
 
@@ -224,6 +235,8 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
       <td>${releaseTableHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}</td>
       <td class="issues-cell">${issuesTableHTML(repo, issueCountsMap.get(repo.name))}</td>
       <td class="issues-cell">${prsTableHTML(repo, prCountsMap.get(repo.name))}</td>
+      <td class="num-cell"><a href="${repo.html_url}/stargazers">${repo.stargazers_count ?? 0}</a></td>
+      <td class="num-cell">${trafficMap.get(repo.name) ? `${trafficMap.get(repo.name).uniques}` : '<span class="text-muted">-</span>'}</td>
       <td class="meta">${timeAgo(repo.pushed_at)}</td>
     `;
     tbody.appendChild(tr);
@@ -232,7 +245,7 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
   container.appendChild(table);
 }
 
-function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort) {
+function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
   if (repos.length === 0) return;
 
   const heading = document.createElement('h2');
@@ -241,11 +254,11 @@ function renderSection(container, label, repos, workflowMap, issueCountsMap, rel
   container.appendChild(heading);
 
   const section = document.createElement('div');
-  renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort);
+  renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
   container.appendChild(section);
 }
 
-export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort) {
+export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
   container.innerHTML = '';
   container.className = '';
 
@@ -254,10 +267,10 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
     return;
   }
 
-  const juliaPackages = sortRepos(repos.filter(r => isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, sortState);
-  const other = sortRepos(repos.filter(r => !isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, sortState);
+  const juliaPackages = sortRepos(repos.filter(r => isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState);
+  const other = sortRepos(repos.filter(r => !isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState);
 
-  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort);
-  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, sortState, onSort);
+  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
+  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
 }
 
