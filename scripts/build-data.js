@@ -12,6 +12,17 @@ const headers = {
   'Authorization': `Bearer ${TOKEN}`,
 };
 
+// Compare semver strings like "v0.1.2" and "v0.2.0". Returns -1, 0, or 1.
+function compareVersions(a, b) {
+  const pa = a.replace(/^v/, '').split('.').map(Number);
+  const pb = b.replace(/^v/, '').split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) return Math.sign(diff);
+  }
+  return 0;
+}
+
 async function apiFetch(endpoint) {
   const res = await fetch(`${API_BASE}${endpoint}`, { headers });
   if (!res.ok) {
@@ -287,6 +298,15 @@ async function main() {
   for (const result of trafficResults) {
     if (result.status === 'fulfilled' && result.value.traffic) {
       traffic[result.value.name] = result.value.traffic;
+    }
+  }
+
+  // Filter out stale pending registrations where the version is already registered
+  for (const [repoName, pending] of Object.entries(pendingRegs)) {
+    const reg = registry[repoName];
+    if (reg && compareVersions(pending.version, reg.version) <= 0) {
+      console.log(`Filtering stale pending registration: ${repoName} ${pending.version} (registered: ${reg.version})`);
+      delete pendingRegs[repoName];
     }
   }
 
