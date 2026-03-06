@@ -91,12 +91,14 @@ async function fetchWorkflowRuns(repo, branch) {
 }
 
 async function fetchLatestRelease(repo) {
-  const data = await apiFetch(`/repos/${ORG}/${repo}/releases/latest`);
-  if (!data) return null;
+  const data = await apiFetch(`/repos/${ORG}/${repo}/releases?per_page=20`);
+  if (!data || !Array.isArray(data)) return null;
+  const semverRelease = data.find(r => /^v\d+\.\d+\.\d+$/.test(r.tag_name));
+  if (!semverRelease) return null;
   return {
-    tag_name: data.tag_name,
-    html_url: data.html_url,
-    published_at: data.published_at,
+    tag_name: semverRelease.tag_name,
+    html_url: semverRelease.html_url,
+    published_at: semverRelease.published_at,
   };
 }
 
