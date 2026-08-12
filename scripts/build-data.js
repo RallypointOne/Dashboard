@@ -32,6 +32,17 @@ async function apiFetch(endpoint) {
   return res.json();
 }
 
+// The search API allows only ~30 requests/minute, far below the core limit, so
+// firing every repo's search concurrently 403s most of them. Serialize them with
+// spacing instead.
+let searchQueue = Promise.resolve();
+function searchFetch(endpoint) {
+  const result = searchQueue.then(() => apiFetch(endpoint));
+  const gap = () => new Promise(r => setTimeout(r, 2100));
+  searchQueue = result.then(gap, gap);
+  return result;
+}
+
 async function fetchAllRepos() {
   let page = 1;
   let allRepos = [];
@@ -62,6 +73,11 @@ async function fetchWorkflowRuns(repo, branch) {
 
   const grouped = new Map();
   for (const run of data.workflow_runs) {
+    // Dependabot emits one uniquely-named pseudo-workflow per update PR, under
+    // path "dynamic/dependabot/...". Grouping by name turned each into its own
+    // timeline, which the dashboard never renders but which dominated the job
+    // stat fetches below.
+    if (!run.path?.startsWith('.github/workflows/')) continue;
     if (!grouped.has(run.name)) grouped.set(run.name, []);
     grouped.get(run.name).push({
       id: run.id,
@@ -73,6 +89,13 @@ async function fetchWorkflowRuns(repo, branch) {
   }
   // Keep last 10 per workflow, reversed so oldest come first (for left-to-right timeline)
   for (const [key, runs] of grouped) grouped.set(key, runs.slice(0, 10).reverse());
+
+  // Only the CI and docs timelines are rendered, so drop everything else before
+  // fetching job stats. Pulling jobs for every workflow cost ~1,240 API calls per
+  // build against GITHUB_TOKEN's 1,000/hour budget, which silently truncated the data.
+  for (const key of [...grouped.keys()]) {
+    if (key !== 'CI' && !/docs|documentation/i.test(key)) grouped.delete(key);
+  }
 
   // Fetch job stats for each run
   for (const [key, runs] of grouped) {
@@ -104,8 +127,8 @@ async function fetchLatestRelease(repo) {
 
 async function fetchIssueCounts(repo) {
   const [open, closed] = await Promise.all([
-    apiFetch(`/search/issues?q=repo:${ORG}/${repo}+type:issue+state:open&per_page=1`),
-    apiFetch(`/search/issues?q=repo:${ORG}/${repo}+type:issue+state:closed&per_page=1`),
+    searchFetch(`/search/issues?q=repo:${ORG}/${repo}+type:issue+state:open&per_page=1`),
+    searchFetch(`/search/issues?q=repo:${ORG}/${repo}+type:issue+state:closed&per_page=1`),
   ]);
   return {
     open: open?.total_count ?? 0,
@@ -164,7 +187,7 @@ async function fetchTraffic(repo) {
 }
 
 async function fetchPRCounts(repo) {
-  const data = await apiFetch(`/search/issues?q=repo:${ORG}/${repo}+type:pr+state:open&per_page=1`);
+  const data = await searchFetch(`/search/issues?q=repo:${ORG}/${repo}+type:pr+state:open&per_page=1`);
   return { open: data?.total_count ?? 0 };
 }
 
@@ -172,7 +195,7 @@ async function fetchPendingRegistrations() {
   // Search for open PRs in JuliaRegistries/General mentioning the org
   let data;
   try {
-    data = await apiFetch(
+    data = await searchFetch(
       `/search/issues?q=repo:JuliaRegistries/General+type:pr+state:open+${ORG}&per_page=100`
     );
   } catch (err) {
@@ -253,6 +276,20 @@ async function main() {
     ),
     fetchPendingRegistrations(),
   ]);
+
+  // apiFetch throws on non-404 errors, so rate-limited fetches arrive here as
+  // rejections. They were previously swallowed, publishing partial data as success.
+  // Coverage and traffic are excluded: both return null on failure by design.
+  const settled = [workflowResults, releaseResults, issueResults, registryResults, prResults].flat();
+  const rejected = settled.filter(r => r.status === 'rejected');
+  if (rejected.length > 0) {
+    console.warn(`WARNING: ${rejected.length}/${settled.length} fetches failed`);
+    console.warn(`  first: ${rejected[0].reason?.message ?? rejected[0].reason}`);
+  }
+  if (rejected.length > settled.length * 0.2) {
+    console.error(`Refusing to publish incomplete data: ${rejected.length}/${settled.length} fetches failed`);
+    process.exit(1);
+  }
 
   const workflows = {};
   for (const result of workflowResults) {
