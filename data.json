@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:56:58.197Z",
+  "generated_at": "2026-08-12T11:57:50.424Z",
   "repos": [
     {
       "id": 1157245934,
@@ -69,8 +69,8 @@
       "releases_url": "https://api.github.com/repos/RallypointOne/Dashboard/releases{/id}",
       "deployments_url": "https://api.github.com/repos/RallypointOne/Dashboard/deployments",
       "created_at": "2026-02-13T15:48:47Z",
-      "updated_at": "2026-08-12T11:56:29Z",
-      "pushed_at": "2026-08-12T11:56:22Z",
+      "updated_at": "2026-08-12T11:57:33Z",
+      "pushed_at": "2026-08-12T11:56:59Z",
       "git_url": "git://github.com/RallypointOne/Dashboard.git",
       "ssh_url": "git@github.com:RallypointOne/Dashboard.git",
       "clone_url": "https://github.com/RallypointOne/Dashboard.git",
@@ -2332,28 +2332,6 @@
       "Deploy to GitHub Pages": [
         {
           "status": "completed",
-          "conclusion": "success",
-          "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/25373887849",
-          "created_at": "2026-05-05T11:33:31Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
-        },
-        {
-          "status": "completed",
-          "conclusion": "success",
-          "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/25376717425",
-          "created_at": "2026-05-05T12:36:12Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
-        },
-        {
-          "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/25380017910",
           "created_at": "2026-05-05T13:42:18Z",
@@ -2430,12 +2408,34 @@
           }
         },
         {
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/31594111119",
           "created_at": "2026-08-12T11:56:24Z",
           "jobs": {
             "total": 1,
+            "passed": 1,
+            "failed": 0
+          }
+        },
+        {
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/31594185399",
+          "created_at": "2026-08-12T11:57:25Z",
+          "jobs": {
+            "total": 1,
+            "passed": 0,
+            "failed": 0
+          }
+        },
+        {
+          "status": "pending",
+          "conclusion": null,
+          "html_url": "https://github.com/RallypointOne/Dashboard/actions/runs/31594192060",
+          "created_at": "2026-08-12T11:57:30Z",
+          "jobs": {
+            "total": 0,
             "passed": 0,
             "failed": 0
           }
@@ -4315,12 +4315,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23777713878",
-          "created_at": "2026-03-31T02:34:14Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-31T02:34:14Z"
         }
       ],
       "julia in /. - Update #1301485416": [
@@ -4328,12 +4323,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23777712942",
-          "created_at": "2026-03-31T02:34:12Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-31T02:34:12Z"
         }
       ],
       "github_actions in /. - Update #1301485162": [
@@ -4341,12 +4331,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23777707457",
-          "created_at": "2026-03-31T02:34:00Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-31T02:34:00Z"
         }
       ],
       "julia in / for DimensionalData - Update #1290404679": [
@@ -4354,12 +4339,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23470333349",
-          "created_at": "2026-03-24T02:33:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-24T02:33:44Z"
         }
       ],
       "julia in /. - Update #1290404649": [
@@ -4367,12 +4347,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23470332769",
-          "created_at": "2026-03-24T02:33:43Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-24T02:33:43Z"
         }
       ],
       "github_actions in /. - Update #1290404289": [
@@ -4380,12 +4355,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23470328314",
-          "created_at": "2026-03-24T02:33:32Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-24T02:33:32Z"
         }
       ],
       "julia in / for DimensionalData - Update #1281880159": [
@@ -4393,12 +4363,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23175725137",
-          "created_at": "2026-03-17T02:33:45Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-17T02:33:45Z"
         }
       ],
       "julia in /. - Update #1281880131": [
@@ -4406,12 +4371,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23175724758",
-          "created_at": "2026-03-17T02:33:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-17T02:33:44Z"
         }
       ],
       "github_actions in /. - Update #1281879804": [
@@ -4419,12 +4379,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/23175720189",
-          "created_at": "2026-03-17T02:33:32Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-17T02:33:32Z"
         }
       ],
       "julia in / for DimensionalData - Update #1273809570": [
@@ -4432,12 +4387,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22884400531",
-          "created_at": "2026-03-10T02:34:13Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-10T02:34:13Z"
         }
       ],
       "julia in /. - Update #1273809548": [
@@ -4445,12 +4395,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22884400192",
-          "created_at": "2026-03-10T02:34:12Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-10T02:34:12Z"
         }
       ],
       "github_actions in /. - Update #1273809158": [
@@ -4458,12 +4403,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22884394818",
-          "created_at": "2026-03-10T02:33:59Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-10T02:33:59Z"
         }
       ],
       "julia in / for DimensionalData - Update #1266085507": [
@@ -4471,12 +4411,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22605649181",
-          "created_at": "2026-03-03T02:34:39Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-03T02:34:39Z"
         }
       ],
       "julia in /. - Update #1266085482": [
@@ -4484,12 +4419,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22605648538",
-          "created_at": "2026-03-03T02:34:38Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-03T02:34:38Z"
         }
       ],
       "github_actions in /. - Update #1266084957": [
@@ -4497,12 +4427,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22605640679",
-          "created_at": "2026-03-03T02:34:20Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-03T02:34:20Z"
         }
       ],
       "julia in /. - Update #1255840978": [
@@ -4510,12 +4435,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22334152558",
-          "created_at": "2026-02-24T02:34:17Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T02:34:17Z"
         }
       ],
       "github_actions in /. - Update #1255840531": [
@@ -4523,12 +4443,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22334146497",
-          "created_at": "2026-02-24T02:34:01Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T02:34:01Z"
         }
       ],
       ".github/workflows/TagBot.yml": [
@@ -4536,12 +4451,7 @@
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/GeoSurrogates.jl/actions/runs/22331177345",
-          "created_at": "2026-02-24T00:32:33Z",
-          "jobs": {
-            "total": 0,
-            "passed": 0,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:32:33Z"
         }
       ]
     },
@@ -6300,12 +6210,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/OverpassAPI.jl/actions/runs/22193522140",
-          "created_at": "2026-02-19T17:54:11Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:54:11Z"
         }
       ],
       "julia in /. - Update #1249580681": [
@@ -6313,12 +6218,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/OverpassAPI.jl/actions/runs/22193520143",
-          "created_at": "2026-02-19T17:54:07Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:54:07Z"
         }
       ],
       "julia in /. - Update #1249580711": [
@@ -6326,12 +6226,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/OverpassAPI.jl/actions/runs/22193519660",
-          "created_at": "2026-02-19T17:54:06Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:54:06Z"
         }
       ],
       "github_actions in /. - Update #1249580700": [
@@ -6339,12 +6234,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/OverpassAPI.jl/actions/runs/22193519608",
-          "created_at": "2026-02-19T17:54:06Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:54:06Z"
         }
       ]
     },
@@ -7163,12 +7053,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Wildfires.jl/actions/runs/22680241689",
-          "created_at": "2026-03-04T17:06:04Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-04T17:06:04Z"
         }
       ]
     },
@@ -7987,12 +7872,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoFetch.jl/actions/runs/23215997992",
-          "created_at": "2026-03-17T20:55:00Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-17T20:55:00Z"
         }
       ],
       "julia in /. - Update #1282836301": [
@@ -8000,12 +7880,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoFetch.jl/actions/runs/23215998007",
-          "created_at": "2026-03-17T20:55:00Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-17T20:55:00Z"
         }
       ],
       "github_actions in /. - Update #1274608402": [
@@ -8013,12 +7888,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoFetch.jl/actions/runs/22923867116",
-          "created_at": "2026-03-10T20:55:24Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-10T20:55:24Z"
         }
       ],
       "julia in /. - Update #1274608399": [
@@ -8026,12 +7896,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoFetch.jl/actions/runs/22923867197",
-          "created_at": "2026-03-10T20:55:24Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-10T20:55:24Z"
         }
       ]
     },
@@ -9653,12 +9518,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/TodoFiles.jl/actions/runs/22340607666",
-          "created_at": "2026-02-24T07:15:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T07:15:44Z"
         }
       ],
       "github_actions in /. - Update #1255680635": [
@@ -9666,12 +9526,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/TodoFiles.jl/actions/runs/22330470630",
-          "created_at": "2026-02-24T00:07:15Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:07:15Z"
         }
       ],
       "julia in /. - Update #1255680642": [
@@ -9679,12 +9534,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/TodoFiles.jl/actions/runs/22330470369",
-          "created_at": "2026-02-24T00:07:14Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:07:14Z"
         }
       ]
     },
@@ -10654,12 +10504,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/WildfireData.jl/actions/runs/22336555660",
-          "created_at": "2026-02-24T04:24:26Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T04:24:26Z"
         }
       ],
       "julia in /. - Update #1255934102": [
@@ -10667,12 +10512,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/WildfireData.jl/actions/runs/22336555731",
-          "created_at": "2026-02-24T04:24:26Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T04:24:26Z"
         }
       ]
     },
@@ -11567,12 +11407,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/DeckGL.jl/actions/runs/22334384570",
-          "created_at": "2026-02-24T02:44:53Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T02:44:53Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/configure-pages, actions/upload-pages-artifact - Update #1254895380": [
@@ -11580,12 +11415,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/DeckGL.jl/actions/runs/22311168654",
-          "created_at": "2026-02-23T14:49:21Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-23T14:49:21Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/configure-pages, actions/upload-pages-artifact - Update #1246276961": [
@@ -11593,12 +11423,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/DeckGL.jl/actions/runs/22084140535",
-          "created_at": "2026-02-17T02:45:04Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T02:45:04Z"
         }
       ],
       "julia in /. - Update #1246276922": [
@@ -11606,12 +11431,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/DeckGL.jl/actions/runs/22084140086",
-          "created_at": "2026-02-17T02:45:03Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T02:45:03Z"
         }
       ],
       "github_actions in /. - Update #1246276926": [
@@ -11619,12 +11439,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/DeckGL.jl/actions/runs/22084140012",
-          "created_at": "2026-02-17T02:45:02Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T02:45:02Z"
         }
       ]
     },
@@ -12495,12 +12310,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Elmfire.jl/actions/runs/22330314974",
-          "created_at": "2026-02-24T00:01:33Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:01:33Z"
         }
       ],
       "github_actions in /. - Update #1255673538": [
@@ -12508,12 +12318,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Elmfire.jl/actions/runs/22330309578",
-          "created_at": "2026-02-24T00:01:22Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:01:22Z"
         }
       ],
       "julia in /. - Update #1246128391": [
@@ -12521,12 +12326,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Elmfire.jl/actions/runs/22080180465",
-          "created_at": "2026-02-16T23:10:05Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-16T23:10:05Z"
         }
       ]
     },
@@ -13437,12 +13237,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22793584786",
-          "created_at": "2026-03-07T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-07T06:11:46Z"
         }
       ],
       "julia in /. - Update #1271697172": [
@@ -13450,12 +13245,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22793584840",
-          "created_at": "2026-03-07T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-07T06:11:46Z"
         }
       ],
       "github_actions in /. - Update #1271697099": [
@@ -13463,12 +13253,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22793584581",
-          "created_at": "2026-03-07T06:11:45Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-07T06:11:45Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1265205588": [
@@ -13476,12 +13261,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22579391020",
-          "created_at": "2026-03-02T14:02:38Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-02T14:02:38Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1265204656": [
@@ -13489,12 +13269,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22579355955",
-          "created_at": "2026-03-02T14:01:41Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-02T14:01:41Z"
         }
       ],
       "julia in /. - Update #1261299298": [
@@ -13502,12 +13277,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22514977852",
-          "created_at": "2026-02-28T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-28T06:11:46Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1261299232": [
@@ -13515,12 +13285,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22514977683",
-          "created_at": "2026-02-28T06:11:45Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-28T06:11:45Z"
         }
       ],
       "github_actions in /. - Update #1261299189": [
@@ -13528,12 +13293,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22514977303",
-          "created_at": "2026-02-28T06:11:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-28T06:11:44Z"
         }
       ],
       "julia in /. - Update #1252059799": [
@@ -13541,12 +13301,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22251744480",
-          "created_at": "2026-02-21T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-21T06:11:46Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1252059732": [
@@ -13554,12 +13309,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22251744136",
-          "created_at": "2026-02-21T06:11:45Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-21T06:11:45Z"
         }
       ],
       "github_actions in /. - Update #1252059715": [
@@ -13567,12 +13317,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22251743840",
-          "created_at": "2026-02-21T06:11:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-21T06:11:44Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1243953598": [
@@ -13580,12 +13325,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22012500602",
-          "created_at": "2026-02-14T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T06:11:46Z"
         }
       ],
       "julia in /. - Update #1243953630": [
@@ -13593,12 +13333,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22012500644",
-          "created_at": "2026-02-14T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T06:11:46Z"
         }
       ],
       "github_actions in /. - Update #1243953555": [
@@ -13606,12 +13341,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/22012500162",
-          "created_at": "2026-02-14T06:11:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T06:11:44Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1242373470": [
@@ -13619,12 +13349,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21960275608",
-          "created_at": "2026-02-12T19:01:31Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T19:01:31Z"
         }
       ],
       "github_actions in / for actions/checkout, peter-evans/create-pull-request - Update #1242371557": [
@@ -13632,12 +13357,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21960233991",
-          "created_at": "2026-02-12T19:00:17Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T19:00:17Z"
         }
       ],
       "julia in /. - Update #1242255521": [
@@ -13645,12 +13365,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21956278527",
-          "created_at": "2026-02-12T17:01:22Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T17:01:22Z"
         }
       ],
       "github_actions in /. - Update #1242255520": [
@@ -13658,12 +13373,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21956278090",
-          "created_at": "2026-02-12T17:01:21Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T17:01:21Z"
         }
       ],
       "julia in /. - Update #1236723395": [
@@ -13671,12 +13381,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21775476580",
-          "created_at": "2026-02-07T06:11:46Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-07T06:11:46Z"
         }
       ],
       "github_actions in /. - Update #1236723313": [
@@ -13684,12 +13389,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21775476099",
-          "created_at": "2026-02-07T06:11:43Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-07T06:11:43Z"
         }
       ],
       "julia in /. - Update #1228043860": [
@@ -13697,12 +13397,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21540028980",
-          "created_at": "2026-01-31T06:11:45Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-31T06:11:45Z"
         }
       ],
       "github_actions in /. - Update #1228043761": [
@@ -13710,12 +13405,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/Landfire.jl/actions/runs/21540028299",
-          "created_at": "2026-01-31T06:11:42Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-31T06:11:42Z"
         }
       ]
     },
@@ -14621,12 +14311,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/22248825161",
-          "created_at": "2026-02-21T02:41:48Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-21T02:41:48Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/upload-pages-artifact - Update #1251361303": [
@@ -14634,12 +14319,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/22233919021",
-          "created_at": "2026-02-20T17:21:10Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-20T17:21:10Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/upload-pages-artifact - Update #1243870090": [
@@ -14647,12 +14327,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/22009686915",
-          "created_at": "2026-02-14T02:41:50Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T02:41:50Z"
         }
       ],
       "github_actions in /. - Update #1243870078": [
@@ -14660,12 +14335,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/22009686749",
-          "created_at": "2026-02-14T02:41:49Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T02:41:49Z"
         }
       ],
       "julia in /. - Update #1243870079": [
@@ -14673,12 +14343,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/22009686627",
-          "created_at": "2026-02-14T02:41:48Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T02:41:48Z"
         }
       ],
       "Deploy Docs": [
@@ -14686,67 +14351,37 @@
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21752998933",
-          "created_at": "2026-02-06T13:54:05Z",
-          "jobs": {
-            "total": 2,
-            "passed": 1,
-            "failed": 1
-          }
+          "created_at": "2026-02-06T13:54:05Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21757806852",
-          "created_at": "2026-02-06T16:26:25Z",
-          "jobs": {
-            "total": 2,
-            "passed": 1,
-            "failed": 1
-          }
+          "created_at": "2026-02-06T16:26:25Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21762887973",
-          "created_at": "2026-02-06T19:18:23Z",
-          "jobs": {
-            "total": 2,
-            "passed": 1,
-            "failed": 1
-          }
+          "created_at": "2026-02-06T19:18:23Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21766868342",
-          "created_at": "2026-02-06T21:40:47Z",
-          "jobs": {
-            "total": 2,
-            "passed": 2,
-            "failed": 0
-          }
+          "created_at": "2026-02-06T21:40:47Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21832305321",
-          "created_at": "2026-02-09T15:59:40Z",
-          "jobs": {
-            "total": 2,
-            "passed": 2,
-            "failed": 0
-          }
+          "created_at": "2026-02-09T15:59:40Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21839077669",
-          "created_at": "2026-02-09T20:17:51Z",
-          "jobs": {
-            "total": 2,
-            "passed": 2,
-            "failed": 0
-          }
+          "created_at": "2026-02-09T20:17:51Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/upload-pages-artifact - Update #1236698978": [
@@ -14754,12 +14389,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21772800172",
-          "created_at": "2026-02-07T02:41:50Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-07T02:41:50Z"
         }
       ],
       "github_actions in /. - Update #1236698960": [
@@ -14767,12 +14397,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21772799824",
-          "created_at": "2026-02-07T02:41:49Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-07T02:41:49Z"
         }
       ],
       "julia in /. - Update #1236698961": [
@@ -14780,12 +14405,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21772799837",
-          "created_at": "2026-02-07T02:41:49Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-07T02:41:49Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/upload-pages-artifact - Update #1236416233": [
@@ -14793,12 +14413,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21757848467",
-          "created_at": "2026-02-06T16:27:44Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-06T16:27:44Z"
         }
       ],
       "github_actions in / for actions/checkout, actions/upload-pages-artifact - Update #1236415956": [
@@ -14806,12 +14421,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GeoExplorer.jl/actions/runs/21757817782",
-          "created_at": "2026-02-06T16:26:47Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-06T16:26:47Z"
         }
       ]
     },
@@ -15630,12 +15240,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22739114029",
-          "created_at": "2026-03-05T22:09:37Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-05T22:09:37Z"
         }
       ],
       "github_actions in /. - Update #1270220700": [
@@ -15643,12 +15248,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22739046577",
-          "created_at": "2026-03-05T22:07:54Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-05T22:07:54Z"
         }
       ],
       "julia in / for Makie, Rasters - Update #1260048588": [
@@ -15656,12 +15256,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22463343275",
-          "created_at": "2026-02-26T22:09:18Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-26T22:09:18Z"
         }
       ],
       "julia in /. - Update #1260048462": [
@@ -15669,12 +15264,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22463338867",
-          "created_at": "2026-02-26T22:09:10Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-26T22:09:10Z"
         }
       ],
       "github_actions in /. - Update #1260046199": [
@@ -15682,12 +15272,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22463279297",
-          "created_at": "2026-02-26T22:07:19Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-26T22:07:19Z"
         }
       ],
       "julia in / for Makie, Rasters - Update #1254940153": [
@@ -15695,12 +15280,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22312207197",
-          "created_at": "2026-02-23T15:15:17Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-23T15:15:17Z"
         }
       ],
       "julia in / for Makie, Rasters - Update #1254935685": [
@@ -15708,12 +15288,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22312090698",
-          "created_at": "2026-02-23T15:12:25Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-23T15:12:25Z"
         }
       ],
       "julia in /. - Update #1251228137": [
@@ -15721,12 +15296,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22229563587",
-          "created_at": "2026-02-20T15:15:25Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-20T15:15:25Z"
         }
       ],
       "github_actions in /. - Update #1251228130": [
@@ -15734,12 +15304,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22229563177",
-          "created_at": "2026-02-20T15:15:24Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-20T15:15:24Z"
         }
       ],
       "CompatHelper": [
@@ -15747,111 +15312,61 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21887741139",
-          "created_at": "2026-02-11T00:24:01Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-11T00:24:01Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21928408463",
-          "created_at": "2026-02-12T00:19:01Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T00:19:01Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21969592306",
-          "created_at": "2026-02-13T00:21:23Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-13T00:21:23Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22007393203",
-          "created_at": "2026-02-14T00:20:08Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-14T00:20:08Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22026698809",
-          "created_at": "2026-02-15T00:20:09Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-15T00:20:09Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22045883086",
-          "created_at": "2026-02-16T00:19:36Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-16T00:19:36Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22081503212",
-          "created_at": "2026-02-17T00:20:16Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T00:20:16Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22121176457",
-          "created_at": "2026-02-18T00:19:53Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-18T00:19:53Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22163194631",
-          "created_at": "2026-02-19T00:20:07Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T00:20:07Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22205798727",
-          "created_at": "2026-02-20T00:17:42Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-20T00:17:42Z"
         }
       ],
       "github_actions in /. - Update #1249939212": [
@@ -15859,12 +15374,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/22202114295",
-          "created_at": "2026-02-19T22:07:51Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T22:07:51Z"
         }
       ],
       "github_actions in /. - Update #1242528815": [
@@ -15872,12 +15382,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21966115090",
-          "created_at": "2026-02-12T22:07:30Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T22:07:30Z"
         }
       ],
       "github_actions in /. - Update #1235614884": [
@@ -15885,12 +15390,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21730326386",
-          "created_at": "2026-02-05T22:07:22Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-05T22:07:22Z"
         }
       ],
       "Build and Deploy Docs": [
@@ -15898,23 +15398,13 @@
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21613356113",
-          "created_at": "2026-02-03T01:39:39Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-03T01:39:39Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/GlobalGrids.jl/actions/runs/21615011472",
-          "created_at": "2026-02-03T02:54:27Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-03T02:54:27Z"
         }
       ]
     },
@@ -16711,12 +16201,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22727895051",
-          "created_at": "2026-03-05T17:22:11Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-03-05T17:22:11Z"
         }
       ],
       "julia in /. - Update #1259838876": [
@@ -16724,12 +16209,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22452751207",
-          "created_at": "2026-02-26T17:08:49Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-26T17:08:49Z"
         }
       ],
       "github_actions in /. - Update #1259838845": [
@@ -16737,12 +16217,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22452750429",
-          "created_at": "2026-02-26T17:08:48Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-26T17:08:48Z"
         }
       ],
       "TagBot": [
@@ -16750,111 +16225,61 @@
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22168716118",
-          "created_at": "2026-02-19T04:37:15Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-19T04:37:15Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22181209563",
-          "created_at": "2026-02-19T12:10:31Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-19T12:10:31Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22190124771",
-          "created_at": "2026-02-19T16:19:53Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-19T16:19:53Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22198161887",
-          "created_at": "2026-02-19T20:08:25Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-19T20:08:25Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22205639735",
-          "created_at": "2026-02-20T00:11:43Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-20T00:11:43Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22211444841",
-          "created_at": "2026-02-20T04:34:53Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-20T04:34:53Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22216520030",
-          "created_at": "2026-02-20T08:13:23Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-20T08:13:23Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22223595027",
-          "created_at": "2026-02-20T12:11:21Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-20T12:11:21Z"
         },
         {
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22348824009",
-          "created_at": "2026-02-24T11:27:18Z",
-          "jobs": {
-            "total": 1,
-            "passed": 0,
-            "failed": 1
-          }
+          "created_at": "2026-02-24T11:27:18Z"
         },
         {
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22410003096",
-          "created_at": "2026-02-25T18:19:36Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-25T18:19:36Z"
         }
       ],
       ".github/workflows/TagBot.yml": [
@@ -16862,12 +16287,7 @@
           "status": "completed",
           "conclusion": "failure",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22331178365",
-          "created_at": "2026-02-24T00:32:35Z",
-          "jobs": {
-            "total": 0,
-            "passed": 0,
-            "failed": 0
-          }
+          "created_at": "2026-02-24T00:32:35Z"
         }
       ],
       "julia in /. - Update #1249529175": [
@@ -16875,12 +16295,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22191891245",
-          "created_at": "2026-02-19T17:07:43Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:07:43Z"
         }
       ],
       "github_actions in /. - Update #1249529115": [
@@ -16888,12 +16303,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22191890583",
-          "created_at": "2026-02-19T17:07:42Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-19T17:07:42Z"
         }
       ],
       "julia in /. - Update #1246611262": [
@@ -16901,12 +16311,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22097388941",
-          "created_at": "2026-02-17T11:52:09Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T11:52:09Z"
         }
       ],
       "github_actions in /. - Update #1246611261": [
@@ -16914,12 +16319,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/22097388700",
-          "created_at": "2026-02-17T11:52:09Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-17T11:52:09Z"
         }
       ],
       "julia in /. - Update #1242262367": [
@@ -16927,12 +16327,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21956496469",
-          "created_at": "2026-02-12T17:07:37Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T17:07:37Z"
         }
       ],
       "github_actions in /. - Update #1242262327": [
@@ -16940,12 +16335,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21956495486",
-          "created_at": "2026-02-12T17:07:35Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-12T17:07:35Z"
         }
       ],
       "julia in /. - Update #1235315902": [
@@ -16953,12 +16343,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21720996303",
-          "created_at": "2026-02-05T17:07:34Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-05T17:07:34Z"
         }
       ],
       "github_actions in /. - Update #1235315862": [
@@ -16966,12 +16351,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21720995619",
-          "created_at": "2026-02-05T17:07:32Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-02-05T17:07:32Z"
         }
       ],
       "julia in /. - Update #1226248402": [
@@ -16979,12 +16359,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21487534776",
-          "created_at": "2026-01-29T17:07:54Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-29T17:07:54Z"
         }
       ],
       "github_actions in /. - Update #1226248346": [
@@ -16992,12 +16367,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21487533777",
-          "created_at": "2026-01-29T17:07:52Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-29T17:07:52Z"
         }
       ],
       "julia in /. - Update #1217830342": [
@@ -17005,12 +16375,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21257590709",
-          "created_at": "2026-01-22T17:08:13Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-22T17:08:13Z"
         }
       ],
       "github_actions in /. - Update #1217830290": [
@@ -17018,12 +16383,7 @@
           "status": "completed",
           "conclusion": "success",
           "html_url": "https://github.com/RallypointOne/RapidRefreshData.jl/actions/runs/21257589672",
-          "created_at": "2026-01-22T17:08:11Z",
-          "jobs": {
-            "total": 1,
-            "passed": 1,
-            "failed": 0
-          }
+          "created_at": "2026-01-22T17:08:11Z"
         }
       ]
     },
@@ -17460,60 +16820,7 @@
       ]
     }
   },
-  "issue_counts": {
-    "Dashboard": {
-      "open": 0,
-      "closed": 0
-    },
-    "SweepKit.jl": {
-      "open": 0,
-      "closed": 0
-    },
-    "JuliaPackageTemplate.jl": {
-      "open": 0,
-      "closed": 1
-    },
-    "GeoSurrogates.jl": {
-      "open": 0,
-      "closed": 2
-    },
-    "Terse.jl": {
-      "open": 0,
-      "closed": 1
-    },
-    "OverpassAPI.jl": {
-      "open": 0,
-      "closed": 2
-    },
-    "GeoFetch.jl": {
-      "open": 0,
-      "closed": 3
-    },
-    "GeodeticOps.jl": {
-      "open": 0,
-      "closed": 0
-    },
-    "TodoFiles.jl": {
-      "open": 0,
-      "closed": 1
-    },
-    "WildfireData.jl": {
-      "open": 0,
-      "closed": 1
-    },
-    "DeckGL.jl": {
-      "open": 0,
-      "closed": 0
-    },
-    "Landfire.jl": {
-      "open": 0,
-      "closed": 1
-    },
-    "GeoExplorer.jl": {
-      "open": 0,
-      "closed": 2
-    }
-  },
+  "issue_counts": {},
   "pr_counts": {},
   "traffic": {},
   "releases": {
