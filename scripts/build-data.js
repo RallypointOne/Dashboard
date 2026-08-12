@@ -27,7 +27,17 @@ async function apiFetch(endpoint) {
   const res = await fetch(`${API_BASE}${endpoint}`, { headers });
   if (!res.ok) {
     if (res.status === 404) return null;
-    throw new Error(`GitHub API ${res.status}: ${res.statusText} for ${endpoint}`);
+    // GitHub returns 403 for permission errors, primary rate limits and secondary
+    // rate limits alike, and statusText is empty over HTTP/2. The body and the
+    // rate-limit headers are the only way to tell which one happened.
+    const body = await res.text().catch(() => '');
+    const meta = [
+      `remaining=${res.headers.get('x-ratelimit-remaining')}`,
+      `limit=${res.headers.get('x-ratelimit-limit')}`,
+      `reset=${res.headers.get('x-ratelimit-reset')}`,
+      `retry-after=${res.headers.get('retry-after')}`,
+    ].join(' ');
+    throw new Error(`GitHub API ${res.status} for ${endpoint}\n  ${meta}\n  ${body.slice(0, 300)}`);
   }
   return res.json();
 }
