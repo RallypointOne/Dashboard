@@ -38,14 +38,21 @@ jobs:
       # Pushing on every run resets GitHub's 60-day inactivity timer, which
       # otherwise disables the schedule trigger. Pushes made with GITHUB_TOKEN
       # do not trigger workflow runs, so this cannot loop.
+      # The checkout may be an older SHA than main's tip (workflow_dispatch pins
+      # the SHA at dispatch time), so rebasing the regenerated data.json onto the
+      # tip conflicts. Rebuild the commit on the tip instead: the file is fully
+      # regenerated each run, so ours is always authoritative.
       - name: Commit data
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp data.json "$RUNNER_TEMP/data.json"
+          git fetch origin main
+          git reset --hard origin/main
+          cp "$RUNNER_TEMP/data.json" data.json
           git add data.json
           git commit -m 'Update dashboard data'
-          git pull --rebase
-          git push
+          git push origin HEAD:main
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
