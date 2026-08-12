@@ -6,6 +6,3 @@
 *.quarto/xref/fc63105a
 *.json
 *.woff
-
-# Committed by the deploy workflow to keep the schedule trigger alive
-!/data.json
