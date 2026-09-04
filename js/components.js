@@ -31,7 +31,7 @@ function escapeHTML(str) {
 
 const STATUS_ORDER = { failure: 0, in_progress: 1, queued: 2, unknown: 3, cancelled: 4, success: 5 };
 
-function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState) {
+function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap, sortState) {
   const sorted = [...repos];
   const dir = sortState.dir === 'asc' ? 1 : -1;
 
@@ -76,12 +76,6 @@ function sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap,
       case 'stars':
         cmp = (a.stargazers_count ?? 0) - (b.stargazers_count ?? 0);
         break;
-      case 'traffic': {
-        const ta = trafficMap.get(a.name)?.uniques ?? 0;
-        const tb = trafficMap.get(b.name)?.uniques ?? 0;
-        cmp = ta - tb;
-        break;
-      }
       case 'pushed':
       default:
         cmp = new Date(a.pushed_at) - new Date(b.pushed_at);
@@ -99,26 +93,29 @@ function getDocsRuns(workflows) {
   return entry ? entry[1] : null;
 }
 
-function timelineHTML(runs) {
+function timelineHTML(label, runs) {
   if (!runs || runs.length === 0) return '';
-  return `<span class="status-timeline">${runs.map((r, i) => {
+  const passed = runs.filter(r => r.conclusion === 'success').length;
+  const summary = `${label}: ${passed} of the last ${runs.length} runs passed`;
+  return `<span class="status-timeline" data-tip="${summary}">${runs.map((r, i) => {
     const isLatest = i === runs.length - 1;
     const latestCls = isLatest ? ' status-bar-latest' : '';
-    const date = new Date(r.created_at).toLocaleDateString();
+    const when = `${timeAgo(r.created_at)} (${new Date(r.created_at).toLocaleString()})`;
+    const state = r.conclusion ?? r.status ?? 'unknown';
 
     if (r.jobs && r.jobs.total > 0) {
       const passPct = (r.jobs.passed / r.jobs.total) * 100;
       const failPct = (r.jobs.failed / r.jobs.total) * 100;
       const otherPct = 100 - passPct - failPct;
-      const title = `${r.jobs.passed}/${r.jobs.total} passed — ${date}`;
+      const title = `${label} ${state}: ${r.jobs.passed}/${r.jobs.total} jobs passed${r.jobs.failed ? `, ${r.jobs.failed} failed` : ''}\n${when}`;
       let segments = '';
       if (failPct > 0) segments += `<span class="bar-segment bar-fail" style="height:${failPct}%"></span>`;
       if (otherPct > 0) segments += `<span class="bar-segment bar-other" style="height:${otherPct}%"></span>`;
       if (passPct > 0) segments += `<span class="bar-segment bar-pass" style="height:${passPct}%"></span>`;
-      return `<a href="${r.html_url}" class="status-bar status-bar-stacked${latestCls}" title="${title}">${segments}</a>`;
+      return `<a href="${r.html_url}" class="status-bar status-bar-stacked${latestCls}" data-tip="${title}">${segments}</a>`;
     }
 
-    return `<a href="${r.html_url}" class="status-bar status-${statusClass(r.conclusion)}${latestCls}" title="${r.conclusion ?? 'running'} — ${date}"></a>`;
+    return `<a href="${r.html_url}" class="status-bar status-${statusClass(r.conclusion)}${latestCls}" data-tip="${label} ${state}\n${when}"></a>`;
   }).join('')}</span>`;
 }
 
@@ -140,16 +137,6 @@ function releaseTableHTML(release, pending) {
   return parts.join(' ');
 }
 
-function coverageHTML(repo, coveragePct) {
-  if (!isJuliaPkg(repo) || !repo.has_pages) return '';
-  const pagesBase = `https://rallypointone.github.io/${repo.name}/`;
-  const url = `${pagesBase}dev/coverage.html`;
-  if (coveragePct != null) {
-    return `<a href="${url}" class="coverage-link">${coveragePct}%</a>`;
-  }
-  return `<a href="${url}" class="coverage-link">Coverage</a>`;
-}
-
 function issuesTableHTML(repo, counts) {
   const url = repo.html_url + '/issues';
   const open = counts?.open ?? 0;
@@ -168,7 +155,7 @@ function prsTableHTML(repo, counts) {
   return `<a href="${url}">${open}</a>`;
 }
 
-function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
+function renderTable(container, filtered, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, prCountsMap, sortState, onSort) {
   container.className = 'view-table';
   const table = document.createElement('table');
   table.className = 'repo-table';
@@ -181,7 +168,6 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     { label: 'Issues', key: 'issues' },
     { label: 'PRs', key: 'prs' },
     { label: 'Stars', key: 'stars' },
-    { label: 'Traffic', key: 'traffic' },
     { label: 'Last Pushed', key: 'pushed' },
   ];
 
@@ -204,39 +190,31 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
     const latestCI = getLatestRun(ciRuns);
     const docsRuns = getDocsRuns(workflows);
     const pagesBase = repo.has_pages ? `https://rallypointone.github.io/${repo.name}/` : null;
-    const covPct = coverageMap.get(repo.name);
 
     const tr = document.createElement('tr');
-    tr.dataset.status = latestCI?.conclusion ?? 'unknown';
 
-    let repoLinks = '';
-    if (isJuliaPkg(repo)) {
-      const parts = [];
-      if (pagesBase) parts.push(`<a href="${pagesBase}" class="docs-link">Docs</a>`);
-      const cov = coverageHTML(repo, covPct);
-      if (cov) parts.push(cov);
-      if (parts.length > 0) repoLinks = `<span class="repo-links">${parts.join(' &middot; ')}</span>`;
-    }
+    const repoLinks = isJuliaPkg(repo) && pagesBase
+      ? `<span class="repo-links"><a href="${pagesBase}" class="docs-link">Docs</a></span>`
+      : '';
 
     tr.innerHTML = `
       <td>
         <a href="${repo.html_url}" class="repo-name">${repo.name}</a>
         ${repoLinks}
-        ${repo.description ? `<span class="table-desc">${escapeHTML(repo.description)}</span>` : ''}
+        ${repo.description ? `<span class="table-desc" data-tip="${escapeHTML(repo.description)}" data-tip-below>${escapeHTML(repo.description)}</span>` : ''}
       </td>
       <td class="status-cell">${ciRuns
-        ? timelineHTML(ciRuns)
+        ? timelineHTML('CI', ciRuns)
         : `<span class="text-muted">-</span>`}</td>
       <td class="status-cell">${isJuliaPkg(repo)
         ? (docsRuns
-          ? timelineHTML(docsRuns)
+          ? timelineHTML('Docs', docsRuns)
           : `<span class="text-muted">-</span>`)
         : ''}</td>
       <td>${releaseTableHTML(releasesMap.get(repo.name), pendingReleasesMap.get(repo.name))}</td>
       <td class="issues-cell">${issuesTableHTML(repo, issueCountsMap.get(repo.name))}</td>
       <td class="issues-cell">${prsTableHTML(repo, prCountsMap.get(repo.name))}</td>
       <td class="num-cell"><a href="${repo.html_url}/stargazers">${repo.stargazers_count ?? 0}</a></td>
-      <td class="num-cell">${trafficMap.get(repo.name) ? `${trafficMap.get(repo.name).uniques}` : '<span class="text-muted">-</span>'}</td>
       <td class="meta">${timeAgo(repo.pushed_at)}</td>
     `;
     tbody.appendChild(tr);
@@ -245,20 +223,7 @@ function renderTable(container, filtered, workflowMap, issueCountsMap, releasesM
   container.appendChild(table);
 }
 
-function renderSection(container, label, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
-  if (repos.length === 0) return;
-
-  const heading = document.createElement('h2');
-  heading.className = 'section-heading';
-  heading.textContent = label;
-  container.appendChild(heading);
-
-  const section = document.createElement('div');
-  renderTable(section, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
-  container.appendChild(section);
-}
-
-export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort) {
+export function renderDashboard(container, repos, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, prCountsMap, sortState, onSort) {
   container.innerHTML = '';
   container.className = '';
 
@@ -267,10 +232,6 @@ export function renderDashboard(container, repos, workflowMap, issueCountsMap, r
     return;
   }
 
-  const juliaPackages = sortRepos(repos.filter(r => isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState);
-  const other = sortRepos(repos.filter(r => !isJuliaPkg(r)), workflowMap, issueCountsMap, releasesMap, prCountsMap, trafficMap, sortState);
-
-  renderSection(container, 'Julia Packages', juliaPackages, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
-  renderSection(container, 'Other', other, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, coverageMap, prCountsMap, trafficMap, sortState, onSort);
+  const sorted = sortRepos(repos, workflowMap, issueCountsMap, releasesMap, prCountsMap, sortState);
+  renderTable(container, sorted, workflowMap, issueCountsMap, releasesMap, pendingReleasesMap, prCountsMap, sortState, onSort);
 }
-

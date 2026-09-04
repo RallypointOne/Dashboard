@@ -1,33 +1,67 @@
+/* Design tokens from rallypoint1.com */
 :root {
-  --color-success: #2da44e;
-  --color-failure: #cf222e;
-  --color-pending: #bf8700;
-  --color-neutral: #656d76;
-  --color-bg: #f6f8fa;
-  --color-card: #ffffff;
-  --color-border: #d0d7de;
-  --color-text: #1f2328;
-  --color-text-secondary: #656d76;
-  --color-header-bg: #24292f;
-  --color-header-text: #ffffff;
-  --color-link: #0969da;
-  --color-input-bg: #ffffff;
-  --color-input-border: #d0d7de;
+  color-scheme: light;
+  --red-400: #d34d56;
+  --red-500: #c8202c;
+  --red-600: #aa1b25;
+  --neutral-0: #fff;
+  --neutral-25: #fbfbfc;
+  --neutral-50: #f7f7f8;
+  --neutral-75: #f1f1f2;
+  --neutral-100: #eceded;
+  --neutral-200: #d9dadc;
+  --neutral-300: #c0c2c4;
+  --neutral-400: #a7a9ac;
+  --neutral-500: #87898c;
+  --neutral-600: #66686b;
+  --neutral-700: #4f5052;
+  --neutral-800: #414042;
+  --neutral-900: #2a2a2b;
+  --neutral-925: #222223;
+  --neutral-950: #1a1a1b;
+
+  /* Text-weight status colors (counts, error messages) */
+  --color-success: #2e7d32;
+  --color-failure: #c62828;
+  --color-pending: #b26a00;
+  /* Softer fills for the CI/Docs bars */
+  --color-success-fill: #6db070;
+  --color-failure-fill: var(--red-400);
+  --color-pending-fill: #dfa64a;
+  --color-neutral: var(--neutral-300);
+  --color-info: #1565c0;
+
+  --color-bg: var(--neutral-0);
+  --color-surface: var(--neutral-50);
+  --color-card: var(--neutral-0);
+  --color-border: var(--neutral-200);
+  --color-border-subtle: var(--neutral-100);
+  --color-heading: var(--neutral-950);
+  --color-text: var(--neutral-800);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-subtle: var(--neutral-500);
+  --color-primary: var(--red-500);
+  --color-primary-hover: var(--red-600);
+  --color-link: var(--neutral-800);
+
+  --color-header-bg: rgba(255, 255, 255, 0.95);
+  --color-header-border: var(--neutral-100);
+  --color-logo-text: var(--neutral-600);
+  --color-logo-border: var(--neutral-200);
+
+  --badge-success-bg: #e8f3e9;
+  --badge-success-text: #1b5e20;
+  --badge-pending-bg: #fbf1e0;
+  --badge-pending-text: #8a5200;
+
+  --font-display: "Archivo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --tracking-wide: 0.16em;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0d1117;
-    --color-card: #161b22;
-    --color-border: #30363d;
-    --color-text: #e6edf3;
-    --color-text-secondary: #8b949e;
-    --color-header-bg: #010409;
-    --color-link: #58a6ff;
-    --color-input-bg: #0d1117;
-    --color-input-border: #30363d;
-  }
-}
 
 * {
   margin: 0;
@@ -36,7 +70,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
@@ -45,31 +80,87 @@ body {
   flex-direction: column;
 }
 
+::selection {
+  background: var(--color-primary);
+  color: var(--neutral-0);
+}
+
 a {
   color: var(--color-link);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--color-primary);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Header */
 #header {
-  background: var(--color-header-bg);
-  color: var(--color-header-text);
-  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  padding: 0 clamp(20px, 5vw, 40px);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 1.5rem;
+  background: var(--color-header-bg);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid var(--color-header-border);
+}
+
+.logo {
+  font-family: var(--font-display);
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.logo-mark {
+  flex: none;
+  height: 30px;
+  width: auto;
+}
+
+.logo-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-logo-text);
+  border-left: 1px solid var(--color-logo-border);
+  padding-left: 11px;
+  white-space: nowrap;
+}
+
+.logo-one {
+  color: var(--color-primary);
+}
+
+.logo:hover .logo-text {
+  color: var(--color-heading);
 }
 
 #header h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-heading);
+}
+
+#header h1 a {
+  color: inherit;
 }
 
 #header-meta {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -77,43 +168,22 @@ a:hover {
   color: var(--color-text-secondary);
 }
 
-#refresh-btn {
-  padding: 0.375rem 0.75rem;
-  border: 1px solid var(--color-input-border);
-  border-radius: 6px;
-  background: var(--color-card);
-  color: var(--color-text);
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-#refresh-btn:hover {
-  background: var(--color-bg);
+.github-link {
+  display: inline-flex;
+  color: var(--color-text-secondary);
 }
 
 /* Dashboard Container */
 #dashboard {
-  padding: 1.5rem;
+  padding: 2rem clamp(20px, 5vw, 40px) 3rem;
   flex: 1;
 }
 
-/* Section Headings */
-.section-heading {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  margin: 1.5rem 0 0.75rem;
-}
-
-.section-heading:first-child {
-  margin-top: 0;
-}
-
 .repo-name {
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 1rem;
-  color: var(--color-link);
+  color: var(--color-heading);
 }
 
 .status-item {
@@ -127,25 +197,32 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 1px;
+  gap: 2px;
 }
 
 .status-bar {
+  position: relative;
   width: 3px;
   height: 16px;
   border-radius: 1px;
   display: inline-block;
 }
 
+/* Invisible pseudo-element widens the hover target beyond the 3px bar */
+.status-bar::before {
+  content: '';
+  position: absolute;
+  inset: -3px -1px;
+}
+
 .status-bar-stacked {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .status-bar-latest {
   width: 8px;
-  margin-left: 3px;
+  margin-left: 1px;
 }
 
 .bar-segment {
@@ -153,57 +230,75 @@ a:hover {
 }
 
 .bar-pass {
-  background: var(--color-success);
+  background: var(--color-success-fill);
 }
 
 .bar-fail {
-  background: var(--color-failure);
+  background: var(--color-failure-fill);
 }
 
 .bar-other {
   background: var(--color-neutral);
 }
 
+.status-success {
+  background: var(--color-success-fill);
+}
+
+.status-failure {
+  background: var(--color-failure-fill);
+}
+
+.status-cancelled,
+.status-unknown {
+  background: var(--color-neutral);
+}
+
+.status-in_progress,
+.status-queued {
+  background: var(--color-pending-fill);
+}
+
 .status-bar:hover {
   opacity: 0.7;
 }
 
-.docs-link,
-.coverage-link {
+.docs-link {
   font-size: 0.8rem;
   font-weight: 500;
+  color: var(--color-info);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docs-link:hover {
+  color: var(--color-primary);
+}
+
+.release-badge,
+.pending-badge {
+  font-family: var(--font-display);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .release-badge {
-  background: #dafbe1;
-  color: #1a7f37;
-  padding: 0.1rem 0.5rem;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
+  background: var(--badge-success-bg);
+  color: var(--badge-success-text);
 }
 
 .pending-badge {
-  background: #fff8c5;
-  color: #9a6700;
-  padding: 0.1rem 0.5rem;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
+  background: var(--badge-pending-bg);
+  color: var(--badge-pending-text);
 }
 
-@media (prefers-color-scheme: dark) {
-  .release-badge {
-    background: #0d3117;
-    color: #3fb950;
-  }
-
-  .pending-badge {
-    background: #3b2300;
-    color: #d29922;
-  }
+.release-badge:hover,
+.pending-badge:hover {
+  color: inherit;
+  opacity: 0.8;
 }
 
 .issues-cell {
@@ -218,7 +313,7 @@ a:hover {
 }
 
 .issues-closed {
-  color: var(--color-neutral);
+  color: var(--color-text-subtle);
   font-weight: 500;
 }
 
@@ -230,23 +325,28 @@ a:hover {
 
 .repo-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.875rem;
   background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: 0 12px 32px rgba(20, 20, 20, 0.06);
 }
 
 .repo-table thead {
-  background: var(--color-bg);
+  background: var(--color-surface);
 }
 
 .repo-table th {
   text-align: left;
-  padding: 0.4rem 0.5rem;
+  padding: 0.6rem 0.6rem;
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-text-secondary);
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
@@ -256,16 +356,16 @@ a:hover {
 }
 
 .repo-table th:hover {
-  color: var(--color-text);
+  color: var(--color-heading);
 }
 
 .repo-table th.sorted {
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .repo-table td {
-  padding: 0.35rem 0.5rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--color-border-subtle);
   vertical-align: middle;
 }
 
@@ -274,24 +374,11 @@ a:hover {
 }
 
 .repo-table tbody tr:hover {
-  background: var(--color-bg);
-}
-
-.repo-table tbody tr[data-status="success"] td:first-child {
-  box-shadow: inset 3px 0 0 var(--color-success);
-}
-
-.repo-table tbody tr[data-status="failure"] td:first-child {
-  box-shadow: inset 3px 0 0 var(--color-failure);
-}
-
-.repo-table tbody tr[data-status="in_progress"] td:first-child,
-.repo-table tbody tr[data-status="queued"] td:first-child {
-  box-shadow: inset 3px 0 0 var(--color-pending);
+  background: var(--color-surface);
 }
 
 .repo-table .repo-name {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .num-cell {
@@ -323,8 +410,25 @@ a:hover {
   margin-left: 0.5rem;
 }
 
-.text-muted {
+.text-muted,
+.meta {
   color: var(--color-text-secondary);
+}
+
+/* Tooltip (see js/tooltip.js) */
+#tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: 320px;
+  padding: 0.4rem 0.6rem;
+  background: var(--neutral-950);
+  color: var(--neutral-0);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: pre-line;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 6px 20px rgba(20, 20, 20, 0.2);
+  pointer-events: none;
 }
 
 /* Loading / Error */
@@ -347,7 +451,7 @@ a:hover {
   height: 24px;
   margin: 1rem auto 0;
   border: 3px solid var(--color-border);
-  border-top-color: var(--color-link);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -360,6 +464,10 @@ a:hover {
 @media (max-width: 600px) {
   #dashboard {
     padding: 1rem;
+  }
+
+  .logo-text {
+    display: none;
   }
 
   .repo-table {

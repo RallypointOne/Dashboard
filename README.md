@@ -15,8 +15,6 @@ A static dashboard for monitoring all public repositories in the [RallypointOne]
 - Links to docs sites and Codecov coverage
 - Three views: **Table** (default), **Cards**, and **Compact**
 - Filter by release status; sort by name, last pushed, or CI status
-- Repos grouped into **Julia Packages** and **Other** sections
-- Dark mode via `prefers-color-scheme`
 
 ## How It Works
 

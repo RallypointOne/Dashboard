@@ -188,14 +188,6 @@ async function fetchCoverage(repoName) {
   }
 }
 
-async function fetchTraffic(repo) {
-  // Requires push access — will 403 with default GITHUB_TOKEN for other org repos
-  const res = await fetch(`${API_BASE}/repos/${ORG}/${repo}/traffic/views`, { headers });
-  if (!res.ok) return null;
-  const data = await res.json();
-  return { views: data.count ?? 0, uniques: data.uniques ?? 0 };
-}
-
 async function fetchPRCounts(repo) {
   const data = await searchFetch(`/search/issues?q=repo:${ORG}/${repo}+type:pr+state:open&per_page=1`);
   return { open: data?.total_count ?? 0 };
@@ -241,7 +233,7 @@ async function main() {
   console.log(`After filtering: ${repos.length} repos (${allRepos.length - repos.length} excluded)`);
 
   // Fetch all supplementary data in parallel
-  const [workflowResults, releaseResults, issueResults, registryResults, coverageResults, prResults, trafficResults, pendingRegs] = await Promise.all([
+  const [workflowResults, releaseResults, issueResults, registryResults, coverageResults, prResults, pendingRegs] = await Promise.all([
     Promise.allSettled(
       repos.map(repo =>
         fetchWorkflowRuns(repo.name, repo.default_branch || 'main')
@@ -278,18 +270,12 @@ async function main() {
           .then(counts => ({ name: repo.name, counts }))
       )
     ),
-    Promise.allSettled(
-      repos.map(repo =>
-        fetchTraffic(repo.name)
-          .then(traffic => ({ name: repo.name, traffic }))
-      )
-    ),
     fetchPendingRegistrations(),
   ]);
 
   // apiFetch throws on non-404 errors, so rate-limited fetches arrive here as
   // rejections. They were previously swallowed, publishing partial data as success.
-  // Coverage and traffic are excluded: both return null on failure by design.
+  // Coverage is excluded: it returns null on failure by design.
   const settled = [workflowResults, releaseResults, issueResults, registryResults, prResults].flat();
   const rejected = settled.filter(r => r.status === 'rejected');
   if (rejected.length > 0) {
@@ -343,13 +329,6 @@ async function main() {
     }
   }
 
-  const traffic = {};
-  for (const result of trafficResults) {
-    if (result.status === 'fulfilled' && result.value.traffic) {
-      traffic[result.value.name] = result.value.traffic;
-    }
-  }
-
   // Filter out stale pending registrations where the version is already registered
   for (const [repoName, pending] of Object.entries(pendingRegs)) {
     const reg = registry[repoName];
@@ -361,7 +340,6 @@ async function main() {
 
   console.log(`Registry entries: ${Object.keys(registry).length}`);
   console.log(`Coverage entries: ${Object.keys(coverage).length}`);
-  console.log(`Traffic entries: ${Object.keys(traffic).length}`);
   console.log(`Pending registrations: ${Object.keys(pendingRegs).length}`);
 
   const data = {
@@ -370,7 +348,6 @@ async function main() {
     workflows,
     issue_counts,
     pr_counts,
-    traffic,
     releases,
     registry,
     coverage,

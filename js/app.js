@@ -1,20 +1,19 @@
 import { renderDashboard } from './components.js';
+import { initTooltip } from './tooltip.js';
 
 let cachedRepos = [];
 let cachedWorkflows = new Map();
 let cachedIssueCounts = new Map();
 let cachedReleases = new Map();
 let cachedPendingReleases = new Map();
-let cachedCoverage = new Map();
 let cachedPRCounts = new Map();
-let cachedTraffic = new Map();
 
 let sortState = { col: 'pushed', dir: 'desc' };
 
 function render() {
   if (cachedRepos.length === 0) return;
   const dashboard = document.getElementById('dashboard');
-  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedCoverage, cachedPRCounts, cachedTraffic, sortState, onSort);
+  renderDashboard(dashboard, cachedRepos, cachedWorkflows, cachedIssueCounts, cachedReleases, cachedPendingReleases, cachedPRCounts, sortState, onSort);
 }
 
 function onSort(col) {
@@ -58,18 +57,14 @@ async function loadDashboard() {
       }
     }
 
-    const coverageMap = new Map(Object.entries(data.coverage || {}));
     const prCountsMap = new Map(Object.entries(data.pr_counts || {}));
-    const trafficMap = new Map(Object.entries(data.traffic || {}));
 
     cachedRepos = repos;
     cachedWorkflows = workflowMap;
     cachedIssueCounts = issueCountsMap;
     cachedReleases = releasesMap;
     cachedPendingReleases = pendingReleasesMap;
-    cachedCoverage = coverageMap;
     cachedPRCounts = prCountsMap;
-    cachedTraffic = trafficMap;
 
     render();
 
@@ -83,5 +78,6 @@ async function loadDashboard() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTooltip();
   loadDashboard();
 });
