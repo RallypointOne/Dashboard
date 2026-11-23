@@ -23,10 +23,17 @@ function compareVersions(a, b) {
   return 0;
 }
 
-async function apiFetch(endpoint) {
+async function apiFetch(endpoint, attempt = 1) {
   const res = await fetch(`${API_BASE}${endpoint}`, { headers });
   if (!res.ok) {
     if (res.status === 404) return null;
+    // 429, 5xx and secondary rate limits (403 with retry-after) are GitHub shedding
+    // load, which passes in seconds
+    const retryAfter = Number(res.headers.get('retry-after'));
+    if ((res.status === 429 || res.status >= 500 || retryAfter) && attempt < 4) {
+      await new Promise(r => setTimeout(r, 1000 * (retryAfter || 2 * attempt)));
+      return apiFetch(endpoint, attempt + 1);
+    }
     // GitHub returns 403 for permission errors, primary rate limits and secondary
     // rate limits alike, and statusText is empty over HTTP/2. The body and the
     // rate-limit headers are the only way to tell which one happened.
@@ -274,16 +281,14 @@ async function main() {
   ]);
 
   // apiFetch throws on non-404 errors, so rate-limited fetches arrive here as
-  // rejections. They were previously swallowed, publishing partial data as success.
+  // rejections. Any of them fails the build, leaving the last complete deploy up:
+  // tolerating a fraction once published a dashboard with no registry versions.
   // Coverage is excluded: it returns null on failure by design.
   const settled = [workflowResults, releaseResults, issueResults, registryResults, prResults].flat();
   const rejected = settled.filter(r => r.status === 'rejected');
   if (rejected.length > 0) {
-    console.warn(`WARNING: ${rejected.length}/${settled.length} fetches failed`);
-    console.warn(`  first: ${rejected[0].reason?.message ?? rejected[0].reason}`);
-  }
-  if (rejected.length > settled.length * 0.2) {
     console.error(`Refusing to publish incomplete data: ${rejected.length}/${settled.length} fetches failed`);
+    console.error(`  first: ${rejected[0].reason?.message ?? rejected[0].reason}`);
     process.exit(1);
   }
 
