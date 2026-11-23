@@ -64,6 +64,11 @@ jobs:
         with:
           path: '.'
 
+      # deploy-pages looks the artifact up by listing the run's artifacts, which
+      # can lag the upload by a moment and come back empty (actions/deploy-pages#451)
+      - name: Wait for the artifact to be listed
+        run: sleep 10
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
